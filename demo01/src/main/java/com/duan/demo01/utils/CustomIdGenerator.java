@@ -1,6 +1,5 @@
 package com.duan.demo01.utils;
 
-import com.duan.demo01.repositories.DeviceRepo;
 import org.hibernate.HibernateException;
 import org.hibernate.MappingException;
 import org.hibernate.engine.spi.SharedSessionContractImplementor;
@@ -8,7 +7,6 @@ import org.hibernate.id.Configurable;
 import org.hibernate.id.IdentifierGenerator;
 import org.hibernate.service.ServiceRegistry;
 import org.hibernate.type.Type;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.Serializable;
 import java.sql.Connection;
@@ -23,14 +21,21 @@ public class CustomIdGenerator implements IdentifierGenerator, Configurable {
     @Override
     public Serializable generate(SharedSessionContractImplementor session, Object object) throws HibernateException {
         String suffix = "";
+        String sub = "00000";
         try {
             Connection connection = session.connection();
             Statement statement = connection.createStatement();
-            String query = "select count(id) from " + entity;
+            String query = "SELECT MAX(id) FROM " + entity;
             ResultSet resultSet = statement.executeQuery(query);
-            if(resultSet.next()) {
-                Integer id = resultSet.getInt(1) + 1;
-                suffix = id.toString();
+            if (resultSet.next()) {
+                String data = resultSet.getString(1).substring(prefix.length());
+                if (data.equalsIgnoreCase("") | data == null) {
+                    suffix = sub;
+                } else {
+                    Integer id = Integer.valueOf(data) + 1;
+                    String num = id.toString();
+                    suffix = sub.substring(num.length()) + num;
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();

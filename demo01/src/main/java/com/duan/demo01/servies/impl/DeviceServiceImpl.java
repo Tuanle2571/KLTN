@@ -1,6 +1,7 @@
 package com.duan.demo01.servies.impl;
 
 import com.duan.demo01.models.Device;
+import com.duan.demo01.models.DeviceMaintenance;
 import com.duan.demo01.models.DeviceStatus;
 import com.duan.demo01.models.QR;
 import com.duan.demo01.repositories.DeviceRepo;
@@ -10,18 +11,23 @@ import com.duan.demo01.servies.DeviceService;
 import com.duan.demo01.utils.ImageUtil;
 import com.duan.demo01.utils.QRCodeGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletRequest;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -49,18 +55,32 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     @Override
+    public List<Device> notInUseDevice() {
+        List<Device> devices = deviceRepo.findDevicesNotInUsed();
+        return devices;
+    }
+
+    @Override
     public Device getDeviceByID(String id) {
         Optional<Device> device1 = deviceRepo.findById(id);
         if (device1.isPresent()) return device1.get();
         return null;
     }
 
+    @Value("${server.port}")
+    private String serverPort;
+
     @Override
-    public Device addDevice(Device device) {
+    public Device saveDevice(Device device) {
         Device added = deviceRepo.save(device);
         try {
             String id = added.getId();
-            BufferedImage qrCodeImage = QRCodeGenerator.getQRCodeImage(id.toString());
+
+            String ip = InetAddress.getLocalHost().getHostAddress();
+            String address = ip + ":" + serverPort;
+            String request = "http://" + address + "/device/detail/" + id;
+
+            BufferedImage qrCodeImage = QRCodeGenerator.getQRCodeImage(request);
             ByteArrayOutputStream bytes = new ByteArrayOutputStream();
             ImageIO.write(qrCodeImage, "png", bytes);
             InputStream qrImage = new ByteArrayInputStream(bytes.toByteArray());
@@ -124,8 +144,32 @@ public class DeviceServiceImpl implements DeviceService {
 
     @Override
     public List<DeviceStatus> getStatus() {
-        List<DeviceStatus> statusList= deviceStatusRepo.findAll();
+        List<DeviceStatus> statusList = deviceStatusRepo.findAll();
         return statusList;
     }
 
+    @Override
+    public DeviceStatus getStatusByValue(String value) {
+        return deviceStatusRepo.findByStatusValue(value);
+    }
+
+    @Override
+    public DeviceMaintenance addMaintenance(String id, DeviceMaintenance deviceMaintenance) {
+        Device device = deviceRepo.findById(id).get();
+        if (device != null) {
+            deviceMaintenance.setDevice(device);
+            device.getDeviceMaintenanceList().add(deviceMaintenance);
+            deviceRepo.saveAndFlush(device);
+        }
+        return null;
+    }
+
+    @Override
+    public List<DeviceMaintenance> getListMaintenance(String id) {
+        return null;
+    }
+
+
+
 }
+

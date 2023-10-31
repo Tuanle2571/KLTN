@@ -11,7 +11,9 @@ public interface WarehouseService {
     Warehouse getWarehouse(String id);
     Warehouse updateWarehouse(Warehouse warehouse);
     Warehouse removeWarehouse(String id);
-
+    Warehouse addDevice(String id,List<Device> devices);
+    Warehouse removeDevice(String id, List<Device> devices);
     List<Device> getDeviceUsedByWarehouse(String id);
+
 
 }

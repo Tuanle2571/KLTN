@@ -1,9 +1,11 @@
 package com.duan.demo01.repositories;
 
-import com.duan.demo01.models.User;
+import com.duan.demo01.models.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
+public interface UserRepo extends JpaRepository<UserEntity,String> {
+    UserEntity findByEmail(String email);
+    UserEntity findFirstByUsername(String username);
+    UserEntity findByUsername(String username);
 
-public interface UserRepo extends JpaRepository<User,String> {
 }

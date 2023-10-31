@@ -1,15 +1,18 @@
 package com.duan.demo01.controllers;
 
 import com.duan.demo01.models.Device;
+import com.duan.demo01.models.DeviceMaintenance;
 import com.duan.demo01.models.DeviceStatus;
-import com.duan.demo01.models.User;
+import com.duan.demo01.models.UserEntity;
 import com.duan.demo01.servies.DeviceService;
 import com.duan.demo01.servies.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Controller
@@ -42,10 +45,10 @@ public class DeviceWebController {
     public String addDevice(Model model) {
         try {
             Device device = new Device();
-            List<User> users = userService.getUsers();
+            List<UserEntity> userEntities = userService.getUsers();
             List<DeviceStatus> deviceStatuses = deviceService.getStatus();
             model.addAttribute("device", device);
-            model.addAttribute("users", users);
+            model.addAttribute("users", userEntities);
             model.addAttribute("deviceStatuses", deviceStatuses);
             return "device-add";
         } catch (Exception e) {
@@ -55,18 +58,23 @@ public class DeviceWebController {
 
     // ACTION
     @PostMapping("/add")
-    public String saveDevice(@ModelAttribute("device") Device device) {
-        Device added = deviceService.addDevice(device);
-        return "redirect:/device/" + added.getId();
+    public String saveDevice(@ModelAttribute("device") Device device, HttpServletRequest request) {
+        final String baseUrl =
+                ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
+
+        Device added = deviceService.saveDevice(device);
+        return "redirect:/device/detail/" + added.getId();
     }
 
     @GetMapping("/detail/{id}")
     public String getDevice(Model model, @PathVariable String id) {
         Device device = deviceService.getDeviceByID(id);
-        List<User> users = userService.getUsers();
+        DeviceMaintenance deviceMaintenance = new DeviceMaintenance();
+        List<UserEntity> userEntities = userService.getUsers();
         List<DeviceStatus> deviceStatuses = deviceService.getStatus();
         model.addAttribute("device", device);
-        model.addAttribute("users", users);
+        model.addAttribute("maintenance", deviceMaintenance);
+        model.addAttribute("users", userEntities);
         model.addAttribute("deviceStatuses", deviceStatuses);
         return "device-detail";
     }
@@ -75,11 +83,22 @@ public class DeviceWebController {
     public String updateDevice(@ModelAttribute("device") Device device, @RequestParam("action") String action) {
         if (action.equalsIgnoreCase("delete")) {
             deviceService.removeDevice(device.getId());
+            return "redirect:/device";
         }
         if (action.equalsIgnoreCase("update")) {
             deviceService.updateDevice(device);
+            return "redirect:/device/detail/" + device.getId();
         }
-        return "redirect:/device/detail" + device.getId();
+        else {
+            return "redirect:/device/detail/" + device.getId();
+        }
+
+    }
+
+    @PostMapping("/maintenance/add")
+    public String addMaintenance(@ModelAttribute("maintenance") DeviceMaintenance deviceMaintenance, @RequestParam("deviceId") String id, HttpServletRequest request) {
+        deviceService.addMaintenance(id, deviceMaintenance);
+        return "redirect:/device/detail/" + id;
     }
 
 }

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+      xmlns:sec="http://www.thymeleaf.org"
+>
 <head th:fragment="header">
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
@@ -8,8 +9,8 @@
     <meta name="description" content=""/>
     <meta name="author" content=""/>
     <title>KLTN - Quản lý Thiết Bị</title>
-    <link href="/css/styles.css" rel="stylesheet"/>
-    <link href="/css/custom-styles.css" rel="stylesheet"/>
+    <link th:href="@{/css/styles.css}" rel="stylesheet"/>
+    <link th:href="@{/css/custom-styles.css}" rel="stylesheet"/>
     <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
     <link rel="stylesheet" href="/resources/demos/style.css">
     <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
@@ -33,23 +34,30 @@
 </head>
 <body class="sb-nav-fixed">
 <nav th:fragment="topNav" class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
-    <!-- Navbar Brand-->
-    <a class="navbar-brand ps-3" href="index.html">KLTN</a>
+    <a class="navbar-brand ps-3" href="index.html">Start Bootstrap</a>
     <!-- Sidebar Toggle-->
     <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i
             class="fas fa-bars"></i></button>
+    <!-- Navbar Search-->
+    <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
+        <div class="input-group">
+            <input class="form-control" type="text" placeholder="Search for..." aria-label="Search for..."
+                   aria-describedby="btnNavbarSearch"/>
+            <button class="btn btn-primary" id="btnNavbarSearch" type="button"><i class="fas fa-search"></i></button>
+        </div>
+    </form>
     <!-- Navbar-->
     <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
         <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown"
                aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                <li><a class="dropdown-item" href="#!">Cài đặt</a></li>
-                <li><a class="dropdown-item" href="#!">Lịch sử</a></li>
+                <li sec:authorize="!isAuthenticated()"><a class="dropdown-item" th:href="@{/login}">Đăng nhập</a></li>
+                <li sec:authorize="!isAuthenticated()"><a class="dropdown-item" th:href="@{/register}">Đăng kí</a></li>
                 <li>
                     <hr class="dropdown-divider"/>
                 </li>
-                <li><a class="dropdown-item" href="#!">Thoát</a></li>
+                <li sec:authorize="isAuthenticated()"><a class="dropdown-item" th:href="@{/logout}">Logout</a></li>
             </ul>
         </li>
     </ul>
@@ -60,11 +68,11 @@
             <div class="sb-sidenav-menu">
                 <div class="nav">
                     <div class="sb-sidenav-menu-heading">Main</div>
-                    <a class="nav-link" href="/device/">
+                    <a class="nav-link" th:href="@{/device}">
                         <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                         Thiết bị
                     </a>
-                    <a class="nav-link" href="/warehouse/">
+                    <a class="nav-link" th:href="@{/warehouse}">
                         <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
                         Kho xưởng
                     </a>
@@ -96,42 +104,7 @@
 
 </html>
 <style>
-    .status-box{
-        padding:1.5rem 1rem;
-    }
-    form{
-        margin: 0;
-        padding: 0;
-    }
-    .form-content{
-        position: relative;
-        padding: 1em;
-    }
-    .form-field{
-        position: relative;
-        clear: both;
-        padding: 5px 10%;
-        border: 1px solid transparent;
-        border-radius: 3px;
-    }
-    .form-field:hover{
-        background-color: #f9f9f9;
-        border: 1px solid #f3f3f3;
-    }
-    .form-label{
-        float: left;
-        width: 33%;
-        padding-top: 3px;
-    }
-    .form-input-control{
-        float: right;
-        width: 66%;
-    }
-    .form-input-control input{
-        padding: 5px 4px;
-        width: 100%;
-        border: 1px solid #aaa;
-        border-radius: 3px;
-    }
+
+
 </style>
 

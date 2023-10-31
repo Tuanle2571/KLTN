@@ -4,10 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @AllArgsConstructor
@@ -15,10 +14,9 @@ import javax.persistence.Id;
 @Data
 public class Role {
     @Id
-    @GeneratedValue
-    private Integer id;
-    @Column(unique = true)
-    private String role;
-    @Column(unique = true)
-    private String roleLevel;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String name;
+    @ManyToMany(mappedBy = "roles")
+    private List<UserEntity> users = new ArrayList<>();
 }

@@ -1,11 +1,21 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org"
+ >
 <head th:replace="layout :: header">
 </head>
 <head>
-    <script type="text/javascript" src="/js/device-detail.js"></script>
+    <script type="text/javascript" th:inline="javascript">
+                  var device = [[${device}]] ;
+
+
+
+
+    </script>
+    <script type="text/javascript" th:src="@{/js/device-detail.js}"></script>
 </head>
 <body class="sb-nav-fixed">
+
 <div th:replace="layout :: topNav">
 </div>
 <div id="layoutSidenav">
@@ -15,15 +25,15 @@
         <main>
             <form class="container-fluid px-4" th:object="${device}" th:action="@{/device/update}" method="post"
                   id="deviceForm">
-                <div class="mt-4">
-                    <div class="device-head d-flex justify-content-between">
-                        <div class="d-flex">
+                <div class="mt-4 device-head">
+                    <div class=" d-flex justify-content-between">
+                        <div class="d-flex align-items-center">
                             <a th:href="@{/device}">
                                 <i class="fa-solid fa-arrow-left fa-xl"></i>
                             </a>
-                            <h5 class="ml-4" th:text="*{name}"></h5>
+                            <input type="text" th:field="*{name}" class="ml-3 device-name-input">
                         </div>
-                        <div>
+                        <div sec:authorize="hasAuthority('ADMIN')">
                             <button class="btn btn-primary" type="button" id="editBtn"> Sửa</button>
                             <button class="btn btn-primary btn-hidden" type="submit" id="commitBtn"
                                     value="update"
@@ -38,20 +48,21 @@
                                     th:name="action">Xóa
                             </button>
                             <button class="btn btn-primary" type="button" onclick="printDiv()">Lấy mã QR</button>
-                            <button class="btn btn-primary" type="button">Sửa chửa</button>
+                            <button class="btn btn-primary" type="button" data-toggle="modal"
+                                    data-target="#maintenance">Sửa chửa
+                            </button>
                         </div>
                     </div>
                 </div>
-
                 <div class="device-detail mt-3">
-                    <div class="row">
+                    <div class="row ">
                         <div class="col-md-6">
                             <div class="d-flex justify-content-between align-items-center">
                                 <label>
                                     Loại Thiết Bị
                                 </label>
                                 <div class="input-group mb-3 w-75">
-                                    <input type="text" class="form-control device-input" aria-label="Default"
+                                    <input type="text" class="form-control input-field" aria-label="Default"
                                            th:field="*{type}"
                                            id="deviceName"
                                            aria-describedby="inputGroup-sizing-default">
@@ -67,7 +78,7 @@
                                     Mã Thiết Bị
                                 </label>
                                 <div class="input-group mb-3 w-75">
-                                    <input type="text" class="form-control " aria-label="Default"
+                                    <input type="text" class="form-control" aria-label="Default"
                                            th:field="*{id}"
                                            readonly
                                            aria-describedby="inputGroup-sizing-default">
@@ -78,7 +89,7 @@
                                     Giá
                                 </label>
                                 <div class="input-group mb-3 w-75">
-                                    <input type="text" class="form-control text-right device-input" aria-label="Default"
+                                    <input type="text" class="form-control text-right input-field" aria-label="Default"
                                            th:field="*{price}"
                                            id="devicePrice"
                                            aria-describedby="inputGroup-sizing-default">
@@ -91,13 +102,13 @@
                                 <label>
                                     Người sử dụng
                                 </label>
-                                <div class="input-group mb-3 w-75  device-input" >
-                                    <select class="custom-select"
+                                <div class="input-group mb-3 w-75  ">
+                                    <select class="custom-select input-field"
                                             th:field="*{user.id}"
                                             id="deviceUser">
-                                        <option th:each="user : ${users}" th:value="${user.id}"
+                                        <option th:each="user : ${userEntities}" th:value="${user.id}"
                                                 th:selected="${user.id == device.user.id}"
-                                                th:text="${user.name}"></option>
+                                                th:text="${user.username}"></option>
                                     </select>
                                 </div>
                             </div>
@@ -106,7 +117,7 @@
                                     Trạng Thái
                                 </label>
                                 <div class="input-group mb-3 w-75">
-                                    <select class="custom-select device-input"
+                                    <select class="custom-select input-field"
                                             th:field="*{deviceStatus.id}"
                                             id="deviceStatus">
                                         <option th:each="deviceStatus : ${deviceStatuses}" th:value="${deviceStatus.id}"
@@ -121,7 +132,7 @@
                                     Cấu hình
                                 </label>
                                 <div class="input-group mb-3 w-75">
-                                    <textarea class="w-100 device-input" rows="3"
+                                    <textarea class="w-100 input-field" rows="3"
 
                                               id="deviceDescrp"></textarea>
                                 </div>
@@ -133,7 +144,7 @@
                                     Ngày mua
                                 </label>
                                 <div class="input-group mb-3 w-75">
-                                    <input type="text" class="form-control device-input" aria-label="Default"
+                                    <input type="text" class="form-control input-field" aria-label="Default"
                                            th:field="*{dateBuy}"
                                            th:value="*{dateBuy}" aria-describedby="inputGroup-sizing-default"
                                            id="dateBuy">
@@ -144,7 +155,7 @@
                                     Hạn bảo hành
                                 </label>
                                 <div class="input-group mb-3 w-75">
-                                    <input type="text" class="form-control device-input" aria-label="Default"
+                                    <input type="text" class="form-control input-field" aria-label="Default"
                                            id="warrantyEnd"
                                            th:field="*{warrantyEnd}"
                                            th:value="*{warrantyEnd}"
@@ -156,7 +167,7 @@
                                     Nhà cung cấp
                                 </label>
                                 <div class="input-group mb-3 w-75">
-                                    <input type="text" class="form-control device-input" aria-label="Default"
+                                    <input type="text" class="form-control input-field" aria-label="Default"
                                            th:field="*{supplier}"
 
                                            id="deviceSupplier"
@@ -173,10 +184,80 @@
                             </div>
                         </div>
                     </div>
+                    <div  sec:authorize="hasAuthority('ADMIN')" class="row device-maintenance" >
+                        <div class="col-md-6">
+                            <div class="card mb-4">
+                                <div class="card-header d-flex justify-content-between">
+                                    <div>
+                                        <i class="fas fa-table me-1"></i>
+                                        Lịch sử bảo trì
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <table class="stripe cell-border" id="deviceMaintenanceList">
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                        </div>
+                    </div>
                 </div>
             </form>
         </main>
         <div th:replace="layout :: footer">
+        </div>
+    </div>
+</div>
+<div class="modal" tabindex="-1" role="dialog" id="maintenance">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form th:action="@{/device/maintenance/add}" th:object="${maintenance}" method="post">
+                <div class="modal-header">
+                    <h5 class="modal-title">Thêm lịch bảo trì vào thiết bị </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <label>
+                            Ngày sửa chửa
+                        </label>
+                        <div class="input-group mb-3 w-75">
+                            <input type="text" class="form-control" aria-label="Default"
+                                   th:field="*{createDate}"
+                                   id="maintenanceDate"
+                                   aria-describedby="inputGroup-sizing-default">
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <label>
+                            Giá
+                        </label>
+                        <div class="input-group mb-3 w-75">
+                            <input type="number" class="form-control" aria-label="Default"
+                                   th:field="*{cost}"
+                                   aria-describedby="inputGroup-sizing-default">
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <label>
+                            Ghi chú
+                        </label>
+                        <div class="input-group mb-3 w-75">
+                            <textarea type="text" class="form-control" aria-label="Default"
+                                      th:field="*{note}"
+                                      aria-describedby="inputGroup-sizing-default"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" name="deviceId" th:value="${device.id}">Save changes
+                    </button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>

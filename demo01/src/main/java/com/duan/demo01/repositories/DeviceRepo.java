@@ -7,11 +7,6 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface DeviceRepo extends JpaRepository<Device, String> {
-    List<Device> findByName(String name);
-
-    @Query(value = "SELECT MAX(e.id) FROM device e",nativeQuery = true)
-    Integer findMaxId();
-
-    @Query(value = "select count(id) from device",nativeQuery = true)
-    Integer countDevice();
+    @Query(value = "select * from device D WHERE D.warehouse_id IS NULL",nativeQuery = true)
+    List<Device> findDevicesNotInUsed();
 }

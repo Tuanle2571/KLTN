@@ -1,5 +1,5 @@
 $(document).ready(function () {
-  var url = window.location.origin;
+  var url = window.location.origin + window.location.pathname;
   $("#FORM_TIME_INPUT").datepicker();
   $("#TIME_PICKER").datepicker();
   $("#deviceList").DataTable({
@@ -43,7 +43,7 @@ $(document).ready(function () {
         render: function (data, type, row) {
           return `
                <a
-                       href= "${url}/device/detail/${data}"
+                       href= "${url}/detail/${data}"
                        target="blank_"
                        type="button"
                        class="btn btn-primary">

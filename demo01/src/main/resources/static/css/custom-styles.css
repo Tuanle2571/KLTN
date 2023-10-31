@@ -1,40 +1,3 @@
-.status-box {
-  padding: 1.5rem 1rem;
-}
-form {
-  margin: 0;
-  padding: 0;
-}
-.form-content {
-  position: relative;
-  padding: 1em;
-}
-.form-field {
-  position: relative;
-  clear: both;
-  padding: 5px 10%;
-  border: 1px solid transparent;
-  border-radius: 3px;
-}
-.form-field:hover {
-  background-color: #f9f9f9;
-  border: 1px solid #f3f3f3;
-}
-.form-label {
-  float: left;
-  width: 33%;
-  padding-top: 3px;
-}
-.form-input-control {
-  float: right;
-  width: 66%;
-}
-.form-input-control input {
-  padding: 5px 4px;
-  width: 100%;
-  border: 1px solid #aaa;
-  border-radius: 3px;
-}
 
 .print-hidden {
   display: none;
@@ -48,4 +11,13 @@ form {
   .print-hidden {
     display: block;
   }
+}
+
+.input-field-readonly{
+    background-color: #e9ecef !important;
+    opacity: 1 !important;
+}
+.device-name-input{
+    border-style:none;
+    pointer-events :none;
 }

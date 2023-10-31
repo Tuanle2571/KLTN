@@ -1,64 +1,78 @@
 package com.duan.demo01;
 
-import com.duan.demo01.models.Device;
-import com.duan.demo01.models.DeviceStatus;
-import com.duan.demo01.models.Role;
-import com.duan.demo01.models.User;
-import com.duan.demo01.repositories.DeviceRepo;
-import com.duan.demo01.repositories.DeviceStatusRepo;
-import com.duan.demo01.repositories.RoleRepo;
-import com.duan.demo01.repositories.UserRepo;
-import com.duan.demo01.servies.UserService;
+import com.duan.demo01.models.*;
+import com.duan.demo01.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Arrays;
 
 @SpringBootApplication
 public class Demo01Application extends SpringBootServletInitializer implements ApplicationRunner {
     @Autowired
     UserRepo userRepo;
     @Autowired
+    WarehouseRepo warehouseRepo;
+    @Autowired
     DeviceStatusRepo deviceStatusRepo;
+    @Autowired
+    RoleRepo roleRepo;
+    @Autowired
+    PasswordEncoder passwordEncoder;
+
 
     public static void main(String[] args) {
         SpringApplication.run(Demo01Application.class, args);
     }
 
-    private final Path storageFolder = Paths.get("uploads");
-
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        if (userRepo.findAll().isEmpty()) {
-            Role staff = new Role(null, "Nhân viên", "staff");
-            Role manager = new Role(null, "Quản lý", "manager");
-            Role admin = new Role(null, "Quản trị viên", "admin");
-            User admin_user = new User(null, "admin", "admin@gmail.com", "admin", admin);
-            User null_user = new User(null, "Không có người dùng", "null", "null", null);
-            User staff_user = new User(null, "staff", "staff@gmail.com", "staff", staff);
-            User manager_user = new User(null, "manager", "manager@gmail.com", "manager", manager);
-            DeviceStatus deviceStatus1 = new DeviceStatus(null, "Rảnh", "free");
-            DeviceStatus deviceStatus2 = new DeviceStatus(null, "Đang sử dụng", "using");
-            DeviceStatus deviceStatus3 = new DeviceStatus(null, "Cần sửa chửa", "repair");
-            DeviceStatus deviceStatus4 = new DeviceStatus(null, "Đang sửa chửa", "repairing");
-            userRepo.save(null_user);
-            userRepo.save(admin_user);
-            userRepo.save(manager_user);
-            userRepo.save(staff_user);
-            deviceStatusRepo.save(deviceStatus1);
-            deviceStatusRepo.save(deviceStatus2);
-            deviceStatusRepo.save(deviceStatus3);
-            deviceStatusRepo.save(deviceStatus4);
+        if (roleRepo.findAll().isEmpty()) {
+            DeviceStatus free = new DeviceStatus(null,"Rảnh","free");
+            DeviceStatus active = new DeviceStatus(null,"Đang hoạt động","active");
+            DeviceStatus repairing = new DeviceStatus(null,"Đang sửa chửa","repairing");
+            Warehouse warehouse1 = new Warehouse(null,"Kho 1", "Số X xã Tân Xuân, huyện Hóc Môn, tp Hồ Chí Minh",null,null);
+            Warehouse warehouse2 = new Warehouse(null,"Kho 2", "Đường Trường Trinh, Tân bình, ... ",null,null);
+            Warehouse warehouse3 = new Warehouse(null,"Kho 3", "Khu Công nghiệp X, Xã Nhị Bình",null,null);
+            Warehouse warehouse4 = new Warehouse(null,"Kho 3", "Khu Công nghiệp X, Xã Nhị Bình",null,null);
+            Warehouse warehouse5 = new Warehouse(null,"Kho 3", "Khu Công nghiệp X, Xã Nhị Bình",null,null);
+            Warehouse warehouse6 = new Warehouse(null,"Kho 3", "Khu Công nghiệp X, Xã Nhị Bình",null,null);
+            Warehouse warehouse7 = new Warehouse(null,"Kho 3", "Khu Công nghiệp X, Xã Nhị Bình",null,null);
+            Warehouse warehouse8 = new Warehouse(null,"Kho 3", "Khu Công nghiệp X, Xã Nhị Bình",null,null);
+            Warehouse warehouse9 = new Warehouse(null,"Kho 3", "Khu Công nghiệp X, Xã Nhị Bình",null,null);
+            Warehouse warehouse10 = new Warehouse(null,"Kho 3", "Khu Công nghiệp X, Xã Nhị Bình",null,null);
+            Warehouse warehouse11 = new Warehouse(null,"Kho 3", "Khu Công nghiệp X, Xã Nhị Bình",null,null);
+            deviceStatusRepo.save(free);
+            deviceStatusRepo.save(active);
+            deviceStatusRepo.save(repairing);
+            warehouseRepo.save(warehouse1);
+            warehouseRepo.save(warehouse2);
+            warehouseRepo.save(warehouse3);
+            warehouseRepo.save(warehouse4);
+            warehouseRepo.save(warehouse5);
+            warehouseRepo.save(warehouse6);
+            warehouseRepo.save(warehouse7);
+            warehouseRepo.save(warehouse8);
+            warehouseRepo.save(warehouse9);
+            warehouseRepo.save(warehouse10);
+            warehouseRepo.save(warehouse11);
+            Role user =new Role(null,  "ADMIN",null);
+            Role admin = new Role(null,  "USER",null);
+            UserEntity new_user = new UserEntity();
+            new_user.setPassword(passwordEncoder.encode("admin"));
+            new_user.setEmail("admin@gmail.com");
+            new_user.setUsername("admin");
+            new_user.setRoles(Arrays.asList(user,admin));
+            userRepo.save(new_user);
+
         }
     }
 }

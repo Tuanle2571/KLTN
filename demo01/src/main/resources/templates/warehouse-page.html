@@ -1,8 +1,15 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="layout :: header">
-    <script type="text/javascript" src="/js/device-add.js"></script>
-    <link href="/css/custom-styles.css" rel="stylesheet"/>
+
+</head>
+<head>
+    <script type="text/javascript" th:inline="javascript">
+                  var warehouses = [[${warehouses}]] ;
+
+    </script>
+    <script type="text/javascript" th:src="@{/js/warehouse-scripts.js}"></script>
+    <link th:href="@{/css/custom-styles.css}" rel="stylesheet"/>
 </head>
 <body class="sb-nav-fixed">
 <div th:replace="layout :: topNav">
@@ -13,25 +20,18 @@
     <div id="layoutSidenav_content">
         <main>
             <div class="container-fluid px-4">
-                <h1 class="mt-4">Tables</h1>
-                <ol class="breadcrumb mb-4">
-                    <li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
-                    <li class="breadcrumb-item active">Tables</li>
+                <ol class="breadcrumb mb-4 mt-4">
+                    <li class="breadcrumb-item"><a>Trang chủ</a></li>
+                    <li class="breadcrumb-item active">Danh sách kho xưởng</li>
                 </ol>
                 <div class="card mb-4">
                     <div class="card-header d-flex justify-content-between">
                         <div>
                             <i class="fas fa-table me-1"></i>
-                            DataTable Example
-                        </div>
-                        <div>
-                            <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#addModal">
-                                Thêm thiết bị
-                            </button>
                         </div>
                     </div>
                     <div class="card-body">
-                        <table class="stripe cell-border" id="deviceList">
+                        <table class="stripe cell-border" id="warehouseList">
                         </table>
                     </div>
                 </div>

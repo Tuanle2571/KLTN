@@ -1,17 +1,12 @@
 package com.duan.demo01.controllers;
 
 import com.duan.demo01.models.Device;
-import com.duan.demo01.repositories.DeviceRepo;
 import com.duan.demo01.servies.DeviceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -31,7 +26,7 @@ public class DeviceController {
 
     @PostMapping("/add")
     public ResponseEntity<String> addDevice(@RequestBody Device device) {
-        Device added = deviceService.addDevice(device);
+        Device added = deviceService.saveDevice(device);
         return ResponseEntity.ok(added.toString());
     }
 

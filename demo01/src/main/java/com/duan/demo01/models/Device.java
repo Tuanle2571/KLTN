@@ -55,7 +55,7 @@ public class Device {
 
     @ManyToOne()
     @JoinColumn(name = "status_id")
-    private DeviceStatus deviceStatus;
+    private Status status;
 
     @OneToMany(mappedBy = "device", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference

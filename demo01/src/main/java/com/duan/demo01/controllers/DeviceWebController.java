@@ -2,7 +2,7 @@ package com.duan.demo01.controllers;
 
 import com.duan.demo01.models.Device;
 import com.duan.demo01.models.DeviceMaintenance;
-import com.duan.demo01.models.DeviceStatus;
+import com.duan.demo01.models.Status;
 import com.duan.demo01.models.UserEntity;
 import com.duan.demo01.servies.DeviceService;
 import com.duan.demo01.servies.UserService;
@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -46,10 +45,10 @@ public class DeviceWebController {
         try {
             Device device = new Device();
             List<UserEntity> userEntities = userService.getUsers();
-            List<DeviceStatus> deviceStatuses = deviceService.getStatus();
+            List<Status> statuses = deviceService.getStatus();
             model.addAttribute("device", device);
             model.addAttribute("users", userEntities);
-            model.addAttribute("deviceStatuses", deviceStatuses);
+            model.addAttribute("statuses", statuses);
             return "device-add";
         } catch (Exception e) {
             return "404";
@@ -75,11 +74,11 @@ public class DeviceWebController {
         Device device = deviceService.getDeviceByID(id);
         DeviceMaintenance deviceMaintenance = new DeviceMaintenance();
         List<UserEntity> userEntities = userService.getUsers();
-        List<DeviceStatus> deviceStatuses = deviceService.getStatus();
+        List<Status> statuses = deviceService.getStatus();
         model.addAttribute("device", device);
         model.addAttribute("maintenance", deviceMaintenance);
         model.addAttribute("users", userEntities);
-        model.addAttribute("deviceStatuses", deviceStatuses);
+        model.addAttribute("statuses", statuses);
         return "device-detail";
     }
 

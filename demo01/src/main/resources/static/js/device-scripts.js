@@ -3,6 +3,8 @@ $(document).ready(function () {
   $("#FORM_TIME_INPUT").datepicker();
   $("#TIME_PICKER").datepicker();
   $("#deviceList").DataTable({
+    fixedColumns: true,
+  pageLength: 5,
     language: {
       lengthMenu: "Hiển thị _MENU_ hàng mỗi trang",
       zeroRecords: "Không có thiết bị trong xưởng",
@@ -10,10 +12,10 @@ $(document).ready(function () {
       infoEmpty: "Không có dữ liệu",
       infoFiltered: "(filtered from _MAX_ total records)",
     },
-    pageLength: 5,
     data: devices,
     columns: [
       {
+      width: 20,
         title: "Mã",
         data: "id",
       },
@@ -35,20 +37,20 @@ $(document).ready(function () {
       },
       {
         title: "Trạng thái",
-        data: "deviceStatus.status",
+        data: "status.status",
       },
       {
+      width: 20,
+className: 'dt-center',
         title: "Xem",
         data: "id",
         render: function (data, type, row) {
           return `
-               <a
-                       href= "${url}/detail/${data}"
-                       target="blank_"
-                       type="button"
-                       class="btn btn-primary">
-                   DETAIL
-               </a>
+                <a
+                                               href= "${url}/detail/${data}"
+                                              target="blank_">
+                                        <i class="fa-regular fa-eye"></i>
+                                      </a>
               `;
         },
       },

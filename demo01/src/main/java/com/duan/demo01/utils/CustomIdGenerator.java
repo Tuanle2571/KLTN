@@ -20,8 +20,7 @@ public class CustomIdGenerator implements IdentifierGenerator, Configurable {
 
     @Override
     public Serializable generate(SharedSessionContractImplementor session, Object object) throws HibernateException {
-        String suffix = "";
-        String sub = "00000";
+        String suffix = "00000";
         try {
             Connection connection = session.connection();
             Statement statement = connection.createStatement();
@@ -29,12 +28,10 @@ public class CustomIdGenerator implements IdentifierGenerator, Configurable {
             ResultSet resultSet = statement.executeQuery(query);
             if (resultSet.next()) {
                 String data = resultSet.getString(1).substring(prefix.length());
-                if (data.equalsIgnoreCase("") | data == null) {
-                    suffix = sub;
-                } else {
+                if (!(data.equalsIgnoreCase("") | data == null)) {
                     Integer id = Integer.valueOf(data) + 1;
                     String num = id.toString();
-                    suffix = sub.substring(num.length()) + num;
+                    suffix = suffix.substring(num.length()) + num;
                 }
             }
         } catch (Exception e) {

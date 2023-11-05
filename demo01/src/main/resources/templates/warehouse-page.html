@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org">
 <head th:replace="layout :: header">
 
 </head>
@@ -28,6 +29,12 @@
                     <div class="card-header d-flex justify-content-between">
                         <div>
                             <i class="fas fa-table me-1"></i>
+                            Danh sách thiết bị
+                        </div>
+                        <div sec:authorize="hasAuthority('ADMIN')">
+                            <a class="btn btn-primary" type="button" th:href="@{/device/add}" >
+                                Thêm thiết bị
+                            </a>
                         </div>
                     </div>
                     <div class="card-body">

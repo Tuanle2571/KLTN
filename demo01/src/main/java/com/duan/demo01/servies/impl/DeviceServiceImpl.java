@@ -2,10 +2,10 @@ package com.duan.demo01.servies.impl;
 
 import com.duan.demo01.models.Device;
 import com.duan.demo01.models.DeviceMaintenance;
-import com.duan.demo01.models.DeviceStatus;
+import com.duan.demo01.models.Status;
 import com.duan.demo01.models.QR;
 import com.duan.demo01.repositories.DeviceRepo;
-import com.duan.demo01.repositories.DeviceStatusRepo;
+import com.duan.demo01.repositories.StatusRepo;
 import com.duan.demo01.repositories.QRRepo;
 import com.duan.demo01.servies.DeviceService;
 import com.duan.demo01.utils.ImageUtil;
@@ -16,19 +16,14 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.util.StreamUtils;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.imageio.ImageIO;
-import javax.servlet.http.HttpServletRequest;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
@@ -39,13 +34,13 @@ import java.util.Optional;
 public class DeviceServiceImpl implements DeviceService {
     private DeviceRepo deviceRepo;
     private QRRepo qrRepo;
-    private DeviceStatusRepo deviceStatusRepo;
+    private StatusRepo statusRepo;
 
     @Autowired
-    public DeviceServiceImpl(DeviceRepo deviceRepo, QRRepo qrRepo, DeviceStatusRepo deviceStatusRepo) {
+    public DeviceServiceImpl(DeviceRepo deviceRepo, QRRepo qrRepo, StatusRepo statusRepo) {
         this.deviceRepo = deviceRepo;
         this.qrRepo = qrRepo;
-        this.deviceStatusRepo = deviceStatusRepo;
+        this.statusRepo = statusRepo;
     }
 
     @Override
@@ -96,7 +91,11 @@ public class DeviceServiceImpl implements DeviceService {
 
     @Override
     public void removeDevice(String id) {
-        deviceRepo.deleteById(id);
+        Optional<Device> device = deviceRepo.findById(id);
+        if (device.isPresent()){
+            ImageUtil.deleteFile(device.get().getQr().getName(),"qr");
+            deviceRepo.deleteById(id);
+        }
     }
 
     @Override
@@ -108,7 +107,7 @@ public class DeviceServiceImpl implements DeviceService {
 
     @Override
     public byte[] getDeviceQRCode(String qrName) {
-        return ImageUtil.getImage(qrName);
+        return ImageUtil.getImage(qrName,"qr");
     }
 
     @Override
@@ -129,14 +128,14 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     @Override
-    public List<DeviceStatus> getStatus() {
-        List<DeviceStatus> statusList = deviceStatusRepo.findAll();
+    public List<Status> getStatus() {
+        List<Status> statusList = statusRepo.findAll();
         return statusList;
     }
 
     @Override
-    public DeviceStatus getStatusByValue(String value) {
-        return deviceStatusRepo.findByStatusValue(value);
+    public Status getStatusByValue(String value) {
+        return statusRepo.findByStatusValue(value);
     }
 
     @Override

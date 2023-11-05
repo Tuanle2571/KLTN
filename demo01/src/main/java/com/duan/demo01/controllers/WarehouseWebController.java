@@ -1,6 +1,7 @@
 package com.duan.demo01.controllers;
 
 import com.duan.demo01.models.Device;
+import com.duan.demo01.models.Status;
 import com.duan.demo01.models.UserEntity;
 import com.duan.demo01.models.Warehouse;
 import com.duan.demo01.servies.DeviceService;
@@ -56,6 +57,35 @@ public class WarehouseWebController {
         model.addAttribute("warehouseId", id);
         return "warehouse-add-device";
     }
+
+    @GetMapping("/add")
+    public String addWarehouse(Model model) {
+        Warehouse warehouse = new Warehouse();
+        List<UserEntity> userEntities = userService.getUsers();
+        List<Status> statuses = deviceService.getStatus();
+
+
+        model.addAttribute("warehouse", warehouse);
+        model.addAttribute("users", userEntities);
+        model.addAttribute("statuses", statuses);
+
+        return "warehouse-add";
+    }
+
+    @PostMapping("/add")
+    public String addWarehousePost(@ModelAttribute("warehouse")Warehouse warehouse,@RequestParam("userId")String userId) {
+        if (!(userId.equalsIgnoreCase("") | userId == null)){
+            UserEntity user = userService.findUser(userId);
+            warehouse.setUser(user);
+        }
+        else {
+            warehouse.setUser(null);
+        }
+       Warehouse savedWarehouse = warehouseService.addWarehouse(warehouse);
+        return "redirect:/warehouse/detail" + savedWarehouse.getId();
+    }
+
+    // action
 
     @PostMapping("/update")
     public String saveUpdateWarehouse(@ModelAttribute("device") Warehouse warehouse, @RequestParam("action") String action){

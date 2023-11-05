@@ -1,12 +1,15 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org"
- >
+>
 <head th:replace="layout :: header">
 </head>
 <head>
     <script type="text/javascript" th:inline="javascript">
                   var device = [[${device}]] ;
+
+
+
 
 
 
@@ -31,7 +34,7 @@
                             <a th:href="@{/device}">
                                 <i class="fa-solid fa-arrow-left fa-xl"></i>
                             </a>
-                            <input type="text" th:field="*{name}" class="ml-3 device-name-input">
+                            <input type="text" th:field="*{name}" class="ml-3 name-input">
                         </div>
                         <div sec:authorize="hasAuthority('ADMIN')">
                             <button class="btn btn-primary" type="button" id="editBtn"> Sửa</button>
@@ -89,7 +92,7 @@
                                     Giá
                                 </label>
                                 <div class="input-group mb-3 w-75">
-                                    <input type="text" class="form-control text-right input-field" aria-label="Default"
+                                    <input type="number" class="form-control text-right input-field" aria-label="Default"
                                            th:field="*{price}"
                                            id="devicePrice"
                                            aria-describedby="inputGroup-sizing-default">
@@ -123,11 +126,10 @@
                                 </label>
                                 <div class="input-group mb-3 w-75">
                                     <select class="custom-select input-field"
-                                            th:field="*{deviceStatus.id}"
-                                            id="deviceStatus">
-                                        <option th:each="deviceStatus : ${deviceStatuses}" th:value="${deviceStatus.id}"
-                                                th:text="${deviceStatus.status}"
-                                                th:selected="${deviceStatus.id == device.deviceStatus.id}"
+                                            th:field="*{status.id}">
+                                        <option th:each="status : ${statuses}" th:value="${status.id}"
+                                                th:text="${status.status}"
+                                                th:selected="${status.id == device.status.id}"
                                         ></option>
                                     </select>
                                 </div>
@@ -189,7 +191,7 @@
                             </div>
                         </div>
                     </div>
-                    <div  sec:authorize="hasAuthority('ADMIN')" class="row device-maintenance" >
+                    <div sec:authorize="hasAuthority('ADMIN')" class="row device-maintenance">
                         <div class="col-md-6">
                             <div class="card mb-4">
                                 <div class="card-header d-flex justify-content-between">

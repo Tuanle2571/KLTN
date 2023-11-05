@@ -4,6 +4,15 @@ $(document).ready(function () {
   $(".input-field").css("pointer-events", "none");
   $(".input-field").addClass("input-field-readonly");
 
+    $("#editBtn").click(function () {
+      $(".input-field").css("pointer-events", "auto");
+      $(".input-field").removeClass("input-field-readonly");
+      $(".name-input").addClass("form-control");
+      $(".name-input").css("pointer-events", "auto");
+      $(".btn-hidden").css("display", "inline-block");
+      $(this).css("display", "none");
+    });
+
   $("#dateBuy").datepicker({
     dateFormat: "dd/mm/yy",
   });
@@ -45,14 +54,6 @@ $(document).ready(function () {
   });
 
   // action
-  $("#editBtn").click(function () {
-    $(".input-field").css("pointer-events", "auto");
-    $(".input-field").removeClass("input-field-readonly");
-    $(".device-name-input").addClass("form-control");
-    $(".device-name-input").css("pointer-events", "auto");
-    $(".btn-hidden").css("display", "inline-block");
-    $(this).css("display", "none");
-  });
 
   $("#printBtn").click(function () {
     $("#qr").printElement();

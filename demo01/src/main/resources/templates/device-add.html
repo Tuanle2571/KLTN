@@ -60,7 +60,7 @@
                                     Giá
                                 </label>
                                 <div class="input-group mb-3 w-75">
-                                    <input type="text" class="form-control text-right device-input" aria-label="Default"
+                                    <input type="number" class="form-control text-right device-input" aria-label="Default"
                                            th:field="*{price}"
                                            id="devicePrice"
                                            aria-describedby="inputGroup-sizing-default">
@@ -75,9 +75,8 @@
                                 </label>
                                 <div class="input-group mb-3 w-75">
                                     <select class="custom-select input-field"
-                                            name="userId"
-                                            id="deviceUser">
-                                        <option value="">Chọn người dùng</option>
+                                            name="userId">
+                                        <option value=""></option>
                                         <option
                                                 th:each="user : ${users}" th:value="${user.id}"
                                                 th:text="${user.username}"></option>
@@ -90,11 +89,10 @@
                                 </label>
                                 <div class="input-group mb-3 w-75">
                                     <select class="custom-select device-input"
-                                            th:field="*{deviceStatus.id}"
-                                            id="deviceStatus">
-                                        <option th:each="deviceStatus : ${deviceStatuses}" th:value="${deviceStatus.id}"
-                                                th:text="${deviceStatus.status}"
-                                                th:selected="${deviceStatus.statusValue == free}"
+                                            th:field="*{status.id}">
+                                        <option th:each="status : ${statuses}" th:value="${status.id}"
+                                                th:text="${status.status}"
+                                                th:selected="${status.statusValue == free}"
                                         ></option>
                                     </select>
                                 </div>

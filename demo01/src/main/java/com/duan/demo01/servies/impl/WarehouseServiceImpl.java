@@ -1,10 +1,10 @@
 package com.duan.demo01.servies.impl;
 
 import com.duan.demo01.models.Device;
-import com.duan.demo01.models.DeviceStatus;
+import com.duan.demo01.models.Status;
 import com.duan.demo01.models.Warehouse;
 import com.duan.demo01.repositories.DeviceRepo;
-import com.duan.demo01.repositories.DeviceStatusRepo;
+import com.duan.demo01.repositories.StatusRepo;
 import com.duan.demo01.repositories.WarehouseRepo;
 import com.duan.demo01.servies.WarehouseService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,12 +17,12 @@ import java.util.Optional;
 
 public class WarehouseServiceImpl implements WarehouseService {
     private WarehouseRepo warehouseRepo;
-    private DeviceStatusRepo deviceStatusRepo;
+    private StatusRepo statusRepo;
     private DeviceRepo deviceRepo;
     @Autowired
-    public WarehouseServiceImpl(WarehouseRepo warehouseRepo, DeviceStatusRepo deviceStatusRepo,DeviceRepo deviceRepo) {
+    public WarehouseServiceImpl(WarehouseRepo warehouseRepo, StatusRepo statusRepo, DeviceRepo deviceRepo) {
         this.warehouseRepo = warehouseRepo;
-        this.deviceStatusRepo = deviceStatusRepo;
+        this.statusRepo = statusRepo;
         this.deviceRepo =  deviceRepo;
     }
 
@@ -30,6 +30,11 @@ public class WarehouseServiceImpl implements WarehouseService {
     @Override
     public List<Warehouse> listWarehouse() {
         return warehouseRepo.findAll();
+    }
+
+    @Override
+    public Warehouse addWarehouse(Warehouse warehouse) {
+        return warehouseRepo.save(warehouse);
     }
 
     @Override
@@ -43,6 +48,8 @@ public class WarehouseServiceImpl implements WarehouseService {
         return warehouseRepo.save(warehouse);
     }
 
+
+
     @Override
     public Warehouse removeWarehouse(String id) {
         Optional<Warehouse> warehouse =warehouseRepo.findById(id);
@@ -52,11 +59,11 @@ public class WarehouseServiceImpl implements WarehouseService {
 
     @Override
     public Warehouse addDevice(String id, List<Device> add) {
-        DeviceStatus status = deviceStatusRepo.findByStatusValue("active");
+        Status status = statusRepo.findByStatusValue("active");
         Warehouse warehouse = this.getWarehouse(id);
         add.forEach(device -> {
             device.setWarehouse(warehouse);
-            device.setDeviceStatus(status);
+            device.setStatus(status);
         });
         warehouse.getDevices().addAll(add);
         return warehouseRepo.saveAndFlush(warehouse);
@@ -64,12 +71,12 @@ public class WarehouseServiceImpl implements WarehouseService {
 
     @Override
     public Warehouse removeDevice(String id, List<Device> devices) {
-        DeviceStatus status = deviceStatusRepo.findByStatusValue("free");
+        Status status = statusRepo.findByStatusValue("free");
         Warehouse warehouse = this.getWarehouse(id);
         warehouse.getDevices().removeAll(devices);
         devices.forEach(device -> {
             device.setWarehouse(null);
-            device.setDeviceStatus(status);
+            device.setStatus(status);
         });
         deviceRepo.saveAll(devices);
         return warehouseRepo.save(warehouse);

@@ -10,6 +10,7 @@ public interface WarehouseService {
     List<Warehouse> listWarehouse();
     Warehouse getWarehouse(String id);
     Warehouse updateWarehouse(Warehouse warehouse);
+    Warehouse addWarehouse(Warehouse warehouse);
     Warehouse removeWarehouse(String id);
     Warehouse addDevice(String id,List<Device> devices);
     Warehouse removeDevice(String id, List<Device> devices);

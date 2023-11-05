@@ -32,6 +32,8 @@ $(document).ready(function () {
         data: "devices.length",
       },
       {
+            width: 20,
+      className: 'dt-center',
         title: "Xem",
         data: "id",
         render: function (data, type, row) {

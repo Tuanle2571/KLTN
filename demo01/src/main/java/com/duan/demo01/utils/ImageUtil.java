@@ -21,7 +21,7 @@ public class ImageUtil {
         URL resourceUrl = ImageUtil.class.getResource("/images");
         if (resourceUrl != null) {
             try {
-                Path storagePath = Paths.get(resourceUrl.toURI()).resolve("qr");
+                Path storagePath = Paths.get(resourceUrl.toURI()).resolve(storage);
                 if (!Files.exists(storagePath)) {
                     try {
                         Files.createDirectories(storagePath);
@@ -47,24 +47,35 @@ public class ImageUtil {
         }
     }
 
-    public static byte[] getImage(String qrName){
+    public static byte[] getImage(String filename, String storage){
         URL resourceUrl = ImageUtil.class.getResource("/images");
         if (resourceUrl != null) {
             try {
-                Path storageFolder = Paths.get(resourceUrl.toURI()).resolve("qr");
-                Path file = storageFolder.resolve(qrName);
+                Path storageFolder = Paths.get(resourceUrl.toURI()).resolve(storage);
+                Path file = storageFolder.resolve(filename);
                 Resource resource = new UrlResource(file.toUri());
                 if (resource.exists() || resource.isReadable()) {
                     byte[] bytes = StreamUtils.copyToByteArray(resource.getInputStream());
                     return bytes;
                 } else {
-                    throw new RuntimeException("Could not read file: " + qrName);
+                    throw new RuntimeException("Could not read file: " + filename);
                 }
             } catch (IOException | URISyntaxException e) {
-                throw new RuntimeException("Could not read file: " + qrName, e);
+                throw new RuntimeException("Could not read file: " + filename, e);
             }
         }
         return null;
+    }
+
+    public static boolean deleteFile(String filename, String storage){
+        URL resourceUrl = ImageUtil.class.getResource("/images");
+        try {
+            Path storageFolder = Paths.get(resourceUrl.toURI()).resolve(storage);
+            Path file = storageFolder.resolve(filename);
+            return Files.deleteIfExists(file);
+        } catch (IOException | URISyntaxException e) {
+            throw new RuntimeException("Error: " + e.getMessage());
+        }
     }
 
 

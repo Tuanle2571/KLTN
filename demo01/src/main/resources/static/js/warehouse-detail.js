@@ -7,6 +7,8 @@ $(document).ready(function () {
   $("#editBtn").click(function () {
     $(".input-field").css("pointer-events", "auto");
     $(".input-field").removeClass("input-field-readonly");
+    $(".name-input").addClass("form-control");
+    $(".name-input").css("pointer-events", "auto");
     $(".btn-hidden").css("display", "inline-block");
     $(this).css("display", "none");
   });
@@ -50,7 +52,7 @@ $(document).ready(function () {
       },
       {
         title: "Trạng thái",
-        data: "deviceStatus.status",
+        data: "status.status",
       },
     ],
   });

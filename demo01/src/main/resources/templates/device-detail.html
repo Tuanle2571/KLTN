@@ -104,9 +104,14 @@
                                 </label>
                                 <div class="input-group mb-3 w-75  ">
                                     <select class="custom-select input-field"
-                                            th:field="*{user.id}"
+                                            name="userId"
                                             id="deviceUser">
-                                        <option th:each="user : ${userEntities}" th:value="${user.id}"
+                                        <option value=""></option>
+                                        <option th:if="${device.user == null}"
+                                                th:each="user : ${users}" th:value="${user.id}"
+                                                th:text="${user.username}"></option>
+                                        <option th:if="${device.user != null}"
+                                                th:each="user : ${users}" th:value="${user.id}"
                                                 th:selected="${user.id == device.user.id}"
                                                 th:text="${user.username}"></option>
                                     </select>
@@ -179,7 +184,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div id="qr" class="print-hidden">
+                            <div th:if="${device.qr != null}" id="qr" class="print-hidden">
                                 <img th:src="@{'/api/device/qr/' + ${device.qr.name}}" alt="image" class="w-100">
                             </div>
                         </div>

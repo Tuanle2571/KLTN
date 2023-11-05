@@ -73,9 +73,9 @@ public class DeviceServiceImpl implements DeviceService {
     @Override
     public Device saveDevice(Device device) {
         Device added = deviceRepo.save(device);
-        try {
-            String id = added.getId();
+        String id = added.getId();
 
+        try {
             String ip = InetAddress.getLocalHost().getHostAddress();
             String address = ip + ":" + serverPort;
             String request = "http://" + address + "/device/detail/" + id;
@@ -87,13 +87,11 @@ public class DeviceServiceImpl implements DeviceService {
             String qrImgName = ImageUtil.uploadFile(qrImage, "qr");
             QR qr = new QR();
             qr.setName(qrImgName);
-
             added.setQr(qr);
-            deviceRepo.save(added);
         } catch (Exception e) {
             e.getMessage();
         }
-        return added;
+        return deviceRepo.save(added);
     }
 
     @Override
@@ -110,19 +108,7 @@ public class DeviceServiceImpl implements DeviceService {
 
     @Override
     public byte[] getDeviceQRCode(String qrName) {
-        try {
-            Path storageFolder = Paths.get("qr");
-            Path file = storageFolder.resolve(qrName);
-            Resource resource = new UrlResource(file.toUri());
-            if (resource.exists() || resource.isReadable()) {
-                byte[] bytes = StreamUtils.copyToByteArray(resource.getInputStream());
-                return bytes;
-            } else {
-                throw new RuntimeException("Could not read file: " + qrName);
-            }
-        } catch (IOException e) {
-            throw new RuntimeException("Could not read file: " + qrName, e);
-        }
+        return ImageUtil.getImage(qrName);
     }
 
     @Override

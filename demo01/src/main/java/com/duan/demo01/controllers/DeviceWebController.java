@@ -58,10 +58,14 @@ public class DeviceWebController {
 
     // ACTION
     @PostMapping("/add")
-    public String saveDevice(@ModelAttribute("device") Device device, HttpServletRequest request) {
-        final String baseUrl =
-                ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
-
+    public String saveDevice(@ModelAttribute("device") Device device,@RequestParam("userId")String userId ) {
+        if (!(userId.equalsIgnoreCase("") | userId == null)){
+            UserEntity user = userService.findUser(userId);
+            device.setUser(user);
+        }
+        else {
+            device.setUser(null);
+        }
         Device added = deviceService.saveDevice(device);
         return "redirect:/device/detail/" + added.getId();
     }
@@ -80,12 +84,19 @@ public class DeviceWebController {
     }
 
     @PostMapping("/update")
-    public String updateDevice(@ModelAttribute("device") Device device, @RequestParam("action") String action) {
+    public String updateDevice(@ModelAttribute("device") Device device, @RequestParam("action") String action,@RequestParam("userId")String userId) {
         if (action.equalsIgnoreCase("delete")) {
             deviceService.removeDevice(device.getId());
             return "redirect:/device";
         }
         if (action.equalsIgnoreCase("update")) {
+            if (!(userId.equalsIgnoreCase("") | userId == null)){
+                UserEntity user = userService.findUser(userId);
+                device.setUser(user);
+            }
+            else {
+                device.setUser(null);
+            }
             deviceService.updateDevice(device);
             return "redirect:/device/detail/" + device.getId();
         }

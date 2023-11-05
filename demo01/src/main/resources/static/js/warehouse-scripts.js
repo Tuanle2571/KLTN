@@ -21,7 +21,7 @@ $(document).ready(function () {
       },
       {
           title: "Người quản lí ",
-          data: "manager.name",
+          data: "user.name",
         },
         {
                 title: "Địa chỉ",

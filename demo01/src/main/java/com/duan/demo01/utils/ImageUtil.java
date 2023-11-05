@@ -1,7 +1,13 @@
 package com.duan.demo01.utils;
 
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.util.StreamUtils;
+
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -12,27 +18,55 @@ import java.util.UUID;
 public class ImageUtil {
 
     public static String uploadFile(InputStream inputStream, String storage) {
-        Path storageFolder = Paths.get(storage);
-        if (!Files.exists(storageFolder)) {
+        URL resourceUrl = ImageUtil.class.getResource("/images");
+        if (resourceUrl != null) {
             try {
-                Files.createDirectories(storageFolder);
-            } catch (IOException e) {
-                throw new RuntimeException("Failed to create storage directory", e);
-            }
-        }
-        String generatedFilename = UUID.randomUUID().toString().replace("-", "");
-        generatedFilename = generatedFilename + "." + "png";
-        Path destinationFilePath = storageFolder.resolve(Paths.get(generatedFilename)).normalize().toAbsolutePath();
+                Path storagePath = Paths.get(resourceUrl.toURI()).resolve("qr");
+                if (!Files.exists(storagePath)) {
+                    try {
+                        Files.createDirectories(storagePath);
+                    } catch (IOException e) {
+                        throw new RuntimeException("Failed to create storage directory", e);
+                    }
+                }
 
-        if (!destinationFilePath.getParent().equals(storageFolder.toAbsolutePath())) {
-            throw new RuntimeException("Cannot store file outside current directory");
-        }
-        try {
-            Files.copy(inputStream, destinationFilePath, StandardCopyOption.REPLACE_EXISTING);
-            return generatedFilename;
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+                String generatedFilename = UUID.randomUUID().toString().replace("-", "") + ".png";
+                Path destinationFilePath = storagePath.resolve(generatedFilename).normalize().toAbsolutePath();
+
+                if (!destinationFilePath.getParent().equals(storagePath.toAbsolutePath())) {
+                    throw new RuntimeException("Cannot store file outside current directory");
+                }
+
+                Files.copy(inputStream, destinationFilePath, StandardCopyOption.REPLACE_EXISTING);
+                return generatedFilename;
+            } catch (IOException | URISyntaxException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            throw new RuntimeException("Resource '/images' not found.");
         }
     }
+
+    public static byte[] getImage(String qrName){
+        URL resourceUrl = ImageUtil.class.getResource("/images");
+        if (resourceUrl != null) {
+            try {
+                Path storageFolder = Paths.get(resourceUrl.toURI()).resolve("qr");
+                Path file = storageFolder.resolve(qrName);
+                Resource resource = new UrlResource(file.toUri());
+                if (resource.exists() || resource.isReadable()) {
+                    byte[] bytes = StreamUtils.copyToByteArray(resource.getInputStream());
+                    return bytes;
+                } else {
+                    throw new RuntimeException("Could not read file: " + qrName);
+                }
+            } catch (IOException | URISyntaxException e) {
+                throw new RuntimeException("Could not read file: " + qrName, e);
+            }
+        }
+        return null;
+    }
+
+
 
 }

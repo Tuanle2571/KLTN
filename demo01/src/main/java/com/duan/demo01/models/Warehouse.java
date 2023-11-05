@@ -1,5 +1,7 @@
 package com.duan.demo01.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -33,8 +35,5 @@ public class Warehouse {
 
     @ManyToOne()
     @JoinColumn(name = "user_id")
-    private UserEntity manager;
-
-
-
+    private UserEntity user;
 }

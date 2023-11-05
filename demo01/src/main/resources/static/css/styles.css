@@ -10847,6 +10847,8 @@ body {
 }
 
 #layoutAuthentication {
+background:#F1F5F9;
+
   display: flex;
   flex-direction: column;
   min-height: 100vh;
@@ -10870,6 +10872,7 @@ body {
   transform: translateX(-225px);
 }
 #layoutSidenav #layoutSidenav_content {
+background:#F1F5F9;
   position: relative;
   display: flex;
   flex-direction: column;

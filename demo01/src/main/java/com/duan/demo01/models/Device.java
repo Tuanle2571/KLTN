@@ -34,12 +34,10 @@ public class Device {
     private String note;
     private String supplier;
 
-
     @JsonFormat(pattern = "dd/MM/yy")
     private LocalDate dateBuy = LocalDate.now();
     @JsonFormat(pattern = "dd/MM/yy")
     private LocalDate warrantyEnd;
-
 
     // relationship
     @ManyToOne()
@@ -58,7 +56,6 @@ public class Device {
     @ManyToOne()
     @JoinColumn(name = "status_id")
     private DeviceStatus deviceStatus;
-
 
     @OneToMany(mappedBy = "device", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference

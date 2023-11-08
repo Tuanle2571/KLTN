@@ -15,7 +15,6 @@ $(document).ready(function () {
     data: devices,
     columns: [
       {
-      width: 20,
         title: "Mã",
         data: "id",
       },

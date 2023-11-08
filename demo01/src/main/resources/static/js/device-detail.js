@@ -22,6 +22,9 @@ $(document).ready(function () {
   $("#warrantyEnd").datepicker({
     dateFormat: "dd/mm/yy",
   });
+  $("#maintenanceDate").datepicker({
+    dateFormat: "dd/mm/yy",
+  });
 
   $("#deviceMaintenanceList").DataTable({
     language: {

@@ -43,8 +43,10 @@ public class WarehouseWebController {
     public String warehouseDetail(Model model, @PathVariable("id") String id) {
         Warehouse warehouse = warehouseService.getWarehouse(id);
         List<UserEntity> userEntities = userService.getUsers();
+        List<Status> statuses = deviceService.getStatus();
         model.addAttribute("warehouse", warehouse);
         model.addAttribute("users", userEntities);
+        model.addAttribute("statuses", statuses);
         return "warehouse-detail";
     }
 
@@ -82,9 +84,8 @@ public class WarehouseWebController {
             warehouse.setUser(null);
         }
        Warehouse savedWarehouse = warehouseService.addWarehouse(warehouse);
-        return "redirect:/warehouse/detail" + savedWarehouse.getId();
+        return "redirect:/warehouse/detail/" + savedWarehouse.getId();
     }
-
     // action
 
     @PostMapping("/update")

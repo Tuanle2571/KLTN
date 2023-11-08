@@ -17,9 +17,13 @@
     background-color: #e9ecef !important;
     opacity: 1 !important;
 }
-.device-name-input{
+.name-input{
     border-style:none;
     pointer-events :none;
+    background: transparent;
+    font-size: 1.1rem;
+        font-weight: 600;
+
 }
 .icon-shape {
   display: inline-flex;

@@ -34,9 +34,9 @@ public class Device {
     private String note;
     private String supplier;
 
-    @JsonFormat(pattern = "dd/MM/yy")
+    @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate dateBuy = LocalDate.now();
-    @JsonFormat(pattern = "dd/MM/yy")
+    @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate warrantyEnd;
 
     // relationship

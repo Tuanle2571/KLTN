@@ -47,13 +47,14 @@ public class Demo01Application extends SpringBootServletInitializer implements A
             warehouseRepo.save(warehouse3);
             Role user =new Role(null,  "ADMIN",null);
             Role admin = new Role(null,  "USER",null);
-            UserEntity new_user = new UserEntity();
-            new_user.setPassword(passwordEncoder.encode("admin"));
-            new_user.setEmail("admin@gmail.com");
-            new_user.setUsername("admin");
-            new_user.setRoles(Arrays.asList(user,admin));
-            userRepo.save(new_user);
-
+            if (userRepo.findAll().isEmpty()){
+                UserEntity new_user = new UserEntity();
+                new_user.setPassword(passwordEncoder.encode("admin"));
+                new_user.setEmail("admin@gmail.com");
+                new_user.setUsername("admin");
+                new_user.setRoles(Arrays.asList(user,admin));
+                userRepo.save(new_user);
+            }
         }
     }
 }

@@ -74,7 +74,7 @@
                                     Người sử dụng
                                 </label>
                                 <div class="input-group mb-3 w-75">
-                                    <select class="custom-select input-field"
+                                    <select class="form-select input-field"
                                             name="userId">
                                         <option value=""></option>
                                         <option
@@ -88,7 +88,7 @@
                                     Trạng Thái
                                 </label>
                                 <div class="input-group mb-3 w-75">
-                                    <select class="custom-select device-input"
+                                    <select class="form-select device-input"
                                             th:field="*{status.id}">
                                         <option th:each="status : ${statuses}" th:value="${status.id}"
                                                 th:text="${status.status}"

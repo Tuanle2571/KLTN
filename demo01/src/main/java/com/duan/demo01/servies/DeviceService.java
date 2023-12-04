@@ -1,5 +1,6 @@
 package com.duan.demo01.servies;
 
+import com.duan.demo01.controllers.DeviceType;
 import com.duan.demo01.models.Device;
 import com.duan.demo01.models.DeviceMaintenance;
 import com.duan.demo01.models.Status;
@@ -20,5 +21,11 @@ public interface DeviceService {
 
     DeviceMaintenance addMaintenance(String id,DeviceMaintenance deviceMaintenance);
     List<DeviceMaintenance> getListMaintenance(String id);
+
+    List<DeviceType> getTypes();
+    DeviceType addType(DeviceType type);
+    DeviceType findType(Integer typeId);
+    DeviceType findTypeByName(String type);
+
 
 }

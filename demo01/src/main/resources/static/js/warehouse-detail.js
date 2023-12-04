@@ -1,5 +1,5 @@
 $(document).ready(function () {
-  var url = window.location.origin;
+  var url = window.location.href;
   $(".btn-hidden").css("display", "none");
   $(".input-field").css("pointer-events", "none");
   $(".input-field").addClass("input-field-readonly");
@@ -14,18 +14,28 @@ $(document).ready(function () {
   });
 
   console.log(warehouse.devices);
-
-  $("#warehouseDeviceList").DataTable({
-   language: {
-        lengthMenu: "Hiển thị _MENU_ hàng mỗi trang",
-        zeroRecords: "Không có thiết bị trong xưởng",
-        info: "Trang _PAGE_ trong _PAGES_",
-        infoEmpty: "Không có dữ liệu",
-        infoFiltered: "(filtered from _MAX_ total records)",
-      },
+  const table = new DataTable("#warehouseDeviceList", {
+    order: [1, "asc"],
+    select: {
+      style: "multi",
+      selector: "td.select-checkbox",
+    },
+    language: {
+      lengthMenu: "Hiển thị _MENU_ hàng mỗi trang",
+      zeroRecords: "Không có thiết bị trong xưởng",
+      info: "",
+      infoEmpty: "Không có dữ liệu",
+      infoFiltered: "(filtered from _MAX_ total records)",
+    },
     pageLength: 5,
     data: warehouse.devices,
     columns: [
+      {
+        defaultContent: "",
+        className: "select-checkbox",
+        orderable: false,
+        data: "",
+      },
       {
         title: "Mã",
         data: "id",
@@ -55,5 +65,31 @@ $(document).ready(function () {
         data: "status.status",
       },
     ],
+  });
+
+  $("#removeDevices").click(function () {
+
+    data = table.rows({ selected: true }).data();
+    var newarray = [];
+    for (var i = 0; i < data.length; i++) {
+      newarray.push({
+        id: data[i].id,
+        name: data[i].name,
+      });
+    }
+    var sData = JSON.stringify(newarray);
+    $.ajax({
+      type: "POST",
+      contentType: "application/json",
+      url: url + "/removedevices",
+      data: sData,
+      timeout: 100000,
+      success: function (data) {
+        location.reload();
+      },
+      error: function (e) {
+        console.log("ERROR: ", e);
+      },
+    });
   });
 });

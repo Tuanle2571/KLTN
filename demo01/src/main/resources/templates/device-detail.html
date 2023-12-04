@@ -1,12 +1,15 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org"
 >
 <head th:replace="layout :: header">
 </head>
 <head>
     <script type="text/javascript" th:inline="javascript">
                   var device = [[${device}]] ;
+
+
+
+
     </script>
     <script type="text/javascript" th:src="@{/js/device-detail.js}"></script>
 </head>
@@ -27,9 +30,9 @@
                             <a th:href="@{/device}">
                                 <i class="fa-solid fa-arrow-left fa-xl"></i>
                             </a>
-                            <input type="text" th:field="*{name}" class="ml-3 name-input">
+                            <input type="text" th:field="*{name}" class="ms-3 name-input">
                         </div>
-                        <div sec:authorize="hasAuthority('ADMIN')">
+                        <div >
                             <button class="btn btn-primary" type="button" id="editBtn"> Sửa</button>
                             <button class="btn btn-primary btn-hidden" type="submit" id="commitBtn"
                                     value="update"
@@ -45,6 +48,7 @@
                             </button>
                             <button class="btn btn-primary" type="button" onclick="printDiv()">Lấy mã QR</button>
                             <button class="btn btn-primary" type="button" data-toggle="modal"
+                                    id="modal-open"
                                     data-target="#maintenance">Sửa chửa
                             </button>
                         </div>
@@ -58,15 +62,17 @@
                                     Loại Thiết Bị
                                 </label>
                                 <div class="input-group mb-3 w-75">
-                                    <input type="text" class="form-control input-field" aria-label="Default"
-                                           th:field="*{type}"
-                                           id="deviceName"
-                                           aria-describedby="inputGroup-sizing-default">
-                                    <div class="input-group-prepend">
-                                        <div class="input-group-text">
-                                            <i class="fa fa-plus "></i>
-                                        </div>
-                                    </div>
+                                    <select class="form-select input-field"
+                                            name="type">
+                                        <option value=""></option>
+                                        <option th:if="${device.type == null}"
+                                                th:each="type : ${types}" th:value="${type.id}"
+                                                th:text="${type.name}"></option>
+                                        <option th:if="${device.type != null}"
+                                                th:each="type : ${types}" th:value="${type.id}"
+                                                th:selected="${type.id == device.type.id}"
+                                                th:text="${type.name}"></option>
+                                    </select>
                                 </div>
                             </div>
                             <div class="d-flex justify-content-between align-items-center">
@@ -85,7 +91,8 @@
                                     Giá
                                 </label>
                                 <div class="input-group mb-3 w-75">
-                                    <input type="number" class="form-control text-right input-field" aria-label="Default"
+                                    <input type="number" class="form-control text-right input-field"
+                                           aria-label="Default"
                                            th:field="*{price}"
                                            id="devicePrice"
                                            aria-describedby="inputGroup-sizing-default">
@@ -133,7 +140,7 @@
                                 </label>
                                 <div class="input-group mb-3 w-75">
                                     <textarea class="w-100 input-field" rows="3"
-
+                                              th:field="*{note}"
                                               id="deviceDescrp"></textarea>
                                 </div>
                             </div>
@@ -155,11 +162,13 @@
                                     Hạn bảo hành
                                 </label>
                                 <div class="input-group mb-3 w-75">
-                                    <input type="text" class="form-control input-field" aria-label="Default"
+                                    <input type="text" class="form-control input-field"
+                                           aria-label="Default"
+                                           aria-describedby="inputGroup-sizing-default"
                                            id="warrantyEnd"
                                            th:field="*{warrantyEnd}"
                                            th:value="*{warrantyEnd}"
-                                           aria-describedby="inputGroup-sizing-default">
+                                           >
                                 </div>
                             </div>
                             <div class="d-flex justify-content-between align-items-center">
@@ -169,7 +178,6 @@
                                 <div class="input-group mb-3 w-75">
                                     <input type="text" class="form-control input-field" aria-label="Default"
                                            th:field="*{supplier}"
-
                                            id="deviceSupplier"
                                            aria-describedby="inputGroup-sizing-default">
                                     <div class="input-group-prepend">
@@ -184,7 +192,7 @@
                             </div>
                         </div>
                     </div>
-                    <div sec:authorize="hasAuthority('ADMIN')" class="row device-maintenance">
+                    <div  class="row device-maintenance">
                         <div class="col-md-6">
                             <div class="card mb-4">
                                 <div class="card-header d-flex justify-content-between">
@@ -215,9 +223,6 @@
             <form th:action="@{/device/maintenance/add}" th:object="${maintenance}" method="post">
                 <div class="modal-header">
                     <h5 class="modal-title">Thêm lịch bảo trì vào thiết bị </h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
                 </div>
                 <div class="modal-body">
                     <div class="d-flex justify-content-between align-items-center">
@@ -228,6 +233,7 @@
                             <input type="text" class="form-control" aria-label="Default"
                                    th:field="*{createDate}"
                                    id="maintenanceDate"
+                                   style="z-index:1080 !important;"
                                    aria-describedby="inputGroup-sizing-default">
                         </div>
                     </div>
@@ -247,15 +253,16 @@
                         </label>
                         <div class="input-group mb-3 w-75">
                             <textarea type="text" class="form-control" aria-label="Default"
+                                      rows="3"
                                       th:field="*{note}"
                                       aria-describedby="inputGroup-sizing-default"></textarea>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary" name="deviceId" th:value="${device.id}">Save changes
+                    <button type="submit" class="btn btn-primary" name="deviceId" th:value="${device.id}">Xác nhận
                     </button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-secondary modal-dismiss" data-dismiss="modal">Thoát</button>
                 </div>
             </form>
         </div>

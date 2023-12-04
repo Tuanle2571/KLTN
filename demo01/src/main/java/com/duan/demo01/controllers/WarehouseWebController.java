@@ -65,31 +65,27 @@ public class WarehouseWebController {
         Warehouse warehouse = new Warehouse();
         List<UserEntity> userEntities = userService.getUsers();
         List<Status> statuses = deviceService.getStatus();
-
-
         model.addAttribute("warehouse", warehouse);
         model.addAttribute("users", userEntities);
         model.addAttribute("statuses", statuses);
-
         return "warehouse-add";
     }
 
     @PostMapping("/add")
-    public String addWarehousePost(@ModelAttribute("warehouse")Warehouse warehouse,@RequestParam("userId")String userId) {
-        if (!(userId.equalsIgnoreCase("") | userId == null)){
+    public String addWarehousePost(@ModelAttribute("warehouse") Warehouse warehouse, @RequestParam("userId") String userId) {
+        if (!(userId.equalsIgnoreCase("") | userId == null)) {
             UserEntity user = userService.findUser(userId);
             warehouse.setUser(user);
-        }
-        else {
+        } else {
             warehouse.setUser(null);
         }
-       Warehouse savedWarehouse = warehouseService.addWarehouse(warehouse);
+        Warehouse savedWarehouse = warehouseService.addWarehouse(warehouse);
         return "redirect:/warehouse/detail/" + savedWarehouse.getId();
     }
     // action
 
     @PostMapping("/update")
-    public String saveUpdateWarehouse(@ModelAttribute("device") Warehouse warehouse, @RequestParam("action") String action){
+    public String saveUpdateWarehouse(@ModelAttribute("device") Warehouse warehouse, @RequestParam("action") String action) {
         if (action.equalsIgnoreCase("delete")) {
             warehouseService.removeWarehouse(warehouse.getId());
             return "redirect:/warehouse";
@@ -97,8 +93,7 @@ public class WarehouseWebController {
         if (action.equalsIgnoreCase("update")) {
             warehouseService.updateWarehouse(warehouse);
             return "redirect:/warehouse/detail/" + warehouse.getId();
-        }
-        else {
+        } else {
             return "redirect:/warehouse/detail/" + warehouse.getId();
 
         }
@@ -112,7 +107,18 @@ public class WarehouseWebController {
             Device getDevice = deviceService.getDeviceByID(device.getId());
             selectedDevice.add(getDevice);
         });
-        warehouseService.addDevice(id,selectedDevice);
+        warehouseService.addDevice(id, selectedDevice);
         return "redirect:/warehouse";
+    }
+
+    @PostMapping("/detail/{id}/removedevices")
+    public String saveRemoveDeviceToWarehouse(@RequestBody List<Device> devices, @PathVariable String id) {
+        List<Device> selectedDevice = new ArrayList<>();
+        devices.forEach(device -> {
+            Device getDevice = deviceService.getDeviceByID(device.getId());
+            selectedDevice.add(getDevice);
+        });
+        warehouseService.removeDevice(id, selectedDevice);
+        return "redirect:/warehouse/detail/" + id;
     }
 }

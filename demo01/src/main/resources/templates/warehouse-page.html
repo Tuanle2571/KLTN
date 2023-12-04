@@ -22,16 +22,16 @@
         <main>
             <div class="container-fluid px-4">
                 <ol class="breadcrumb mb-4 mt-4">
-                    <li class="breadcrumb-item"><a>Trang chủ</a></li>
+                    <li class="breadcrumb-item"><a th:href="@{/dashboard}">Trang chủ</a></li>
                     <li class="breadcrumb-item active">Danh sách kho xưởng</li>
                 </ol>
                 <div class="card mb-4">
                     <div class="card-header d-flex justify-content-between">
                         <div>
                             <i class="fas fa-table me-1"></i>
-                            Danh sách thiết bị
+                            Danh sách kho xưởng
                         </div>
-                        <div sec:authorize="hasAuthority('ADMIN')">
+                        <div >
                             <a class="btn btn-primary" type="button" th:href="@{/warehouse/add}" >
                                 Thêm kho
                             </a>

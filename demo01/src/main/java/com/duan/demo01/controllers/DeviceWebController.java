@@ -4,14 +4,17 @@ import com.duan.demo01.models.Device;
 import com.duan.demo01.models.DeviceMaintenance;
 import com.duan.demo01.models.Status;
 import com.duan.demo01.models.UserEntity;
+import com.duan.demo01.repositories.DeviceTypeRepo;
 import com.duan.demo01.servies.DeviceService;
 import com.duan.demo01.servies.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDate;
 import java.util.List;
 
 @Controller
@@ -46,6 +49,8 @@ public class DeviceWebController {
             Device device = new Device();
             List<UserEntity> userEntities = userService.getUsers();
             List<Status> statuses = deviceService.getStatus();
+            List<DeviceType> types = deviceService.getTypes();
+            model.addAttribute("types", types);
             model.addAttribute("device", device);
             model.addAttribute("users", userEntities);
             model.addAttribute("statuses", statuses);
@@ -57,12 +62,18 @@ public class DeviceWebController {
 
     // ACTION
     @PostMapping("/add")
-    public String saveDevice(@ModelAttribute("device") Device device,@RequestParam("userId")String userId ) {
-        if (!(userId.equalsIgnoreCase("") | userId == null)){
+    public String saveDevice(@ModelAttribute("device") Device device,@Nullable @RequestParam("userId") String userId,@Nullable @RequestParam("type") String typeId) {
+        if (!(userId.equalsIgnoreCase("") | userId == null)) {
             UserEntity user = userService.findUser(userId);
             device.setUser(user);
+        } else {
+            device.setUser(null);
         }
-        else {
+
+        if (!(typeId.equalsIgnoreCase("") | typeId == null)) {
+            DeviceType type = deviceService.findType(Integer.valueOf(typeId));
+            device.setType(type);
+        } else {
             device.setUser(null);
         }
         Device added = deviceService.saveDevice(device);
@@ -75,6 +86,8 @@ public class DeviceWebController {
         DeviceMaintenance deviceMaintenance = new DeviceMaintenance();
         List<UserEntity> userEntities = userService.getUsers();
         List<Status> statuses = deviceService.getStatus();
+        List<DeviceType> types = deviceService.getTypes();
+        model.addAttribute("types", types);
         model.addAttribute("device", device);
         model.addAttribute("maintenance", deviceMaintenance);
         model.addAttribute("users", userEntities);
@@ -83,23 +96,21 @@ public class DeviceWebController {
     }
 
     @PostMapping("/update")
-    public String updateDevice(@ModelAttribute("device") Device device, @RequestParam("action") String action,@RequestParam("userId")String userId) {
+    public String updateDevice(@ModelAttribute("device") Device device, @RequestParam("action") String action, @RequestParam("userId") String userId, @RequestParam("dateBuy") String dateBuy) {
         if (action.equalsIgnoreCase("delete")) {
             deviceService.removeDevice(device.getId());
             return "redirect:/device";
         }
         if (action.equalsIgnoreCase("update")) {
-            if (!(userId.equalsIgnoreCase("") | userId == null)){
+            if (!(userId.equalsIgnoreCase("") | userId == null)) {
                 UserEntity user = userService.findUser(userId);
                 device.setUser(user);
-            }
-            else {
+            } else {
                 device.setUser(null);
             }
             deviceService.updateDevice(device);
             return "redirect:/device/detail/" + device.getId();
-        }
-        else {
+        } else {
             return "redirect:/device/detail/" + device.getId();
         }
 

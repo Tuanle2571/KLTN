@@ -1,10 +1,12 @@
 package com.duan.demo01.servies.impl;
 
+import com.duan.demo01.controllers.DeviceType;
 import com.duan.demo01.models.Device;
 import com.duan.demo01.models.DeviceMaintenance;
 import com.duan.demo01.models.Status;
 import com.duan.demo01.models.QR;
 import com.duan.demo01.repositories.DeviceRepo;
+import com.duan.demo01.repositories.DeviceTypeRepo;
 import com.duan.demo01.repositories.StatusRepo;
 import com.duan.demo01.repositories.QRRepo;
 import com.duan.demo01.servies.DeviceService;
@@ -35,12 +37,14 @@ public class DeviceServiceImpl implements DeviceService {
     private DeviceRepo deviceRepo;
     private QRRepo qrRepo;
     private StatusRepo statusRepo;
+    private DeviceTypeRepo typeRepo;
 
     @Autowired
-    public DeviceServiceImpl(DeviceRepo deviceRepo, QRRepo qrRepo, StatusRepo statusRepo) {
+    public DeviceServiceImpl(DeviceRepo deviceRepo, QRRepo qrRepo, StatusRepo statusRepo, DeviceTypeRepo typeRepo) {
         this.deviceRepo = deviceRepo;
         this.qrRepo = qrRepo;
         this.statusRepo = statusRepo;
+        this.typeRepo = typeRepo;
     }
 
     @Override
@@ -92,8 +96,8 @@ public class DeviceServiceImpl implements DeviceService {
     @Override
     public void removeDevice(String id) {
         Optional<Device> device = deviceRepo.findById(id);
-        if (device.isPresent()){
-            ImageUtil.deleteFile(device.get().getQr().getName(),"qr");
+        if (device.isPresent()) {
+            ImageUtil.deleteFile(device.get().getQr().getName(), "qr");
             deviceRepo.deleteById(id);
         }
     }
@@ -107,7 +111,7 @@ public class DeviceServiceImpl implements DeviceService {
 
     @Override
     public byte[] getDeviceQRCode(String qrName) {
-        return ImageUtil.getImage(qrName,"qr");
+        return ImageUtil.getImage(qrName, "qr");
     }
 
     @Override
@@ -154,6 +158,26 @@ public class DeviceServiceImpl implements DeviceService {
         return null;
     }
 
+    @Override
+    public List<DeviceType> getTypes() {
+        return typeRepo.findAll();
+    }
+
+    @Override
+    public DeviceType addType(DeviceType type) {
+        return typeRepo.save(type);
+    }
+
+    @Override
+    public DeviceType findType(Integer typeId) {
+        Optional<DeviceType> type = typeRepo.findById(typeId);
+        return type.isPresent() ? type.get() : null;
+    }
+
+    @Override
+    public DeviceType findTypeByName(String type) {
+        return typeRepo.findByName(type);
+    }
 
 
 }

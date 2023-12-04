@@ -1,5 +1,6 @@
 package com.duan.demo01.models;
 
+import com.duan.demo01.controllers.DeviceType;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -29,14 +30,11 @@ public class Device {
     @GeneratedValue(generator = "Device-UUID")
     private String id;
     private String name;
-    private String type;
     private String price;
     private String note;
     private String supplier;
 
-    @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate dateBuy = LocalDate.now();
-    @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate warrantyEnd;
 
     // relationship
@@ -56,6 +54,9 @@ public class Device {
     @ManyToOne()
     @JoinColumn(name = "status_id")
     private Status status;
+    @ManyToOne()
+    @JoinColumn(name = "type_id")
+    private DeviceType type;
 
     @OneToMany(mappedBy = "device", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference

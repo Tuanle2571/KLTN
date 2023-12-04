@@ -16,13 +16,7 @@ $(document).ready(function () {
   $("#dateBuy").datepicker({
     dateFormat: "dd/mm/yy",
   });
-  $("#maintenanceDate").datepicker({
-    dateFormat: "dd/mm/yy",
-  });
   $("#warrantyEnd").datepicker({
-    dateFormat: "dd/mm/yy",
-  });
-  $("#maintenanceDate").datepicker({
     dateFormat: "dd/mm/yy",
   });
 
@@ -61,6 +55,18 @@ $(document).ready(function () {
   $("#printBtn").click(function () {
     $("#qr").printElement();
   });
+$("#modal-open").click(function () {
+	$('#maintenance').modal("toggle");
+	  $("#maintenanceDate").datepicker({
+        dateFormat: "dd/mm/yy",
+      });
+
+});
+
+$(".modal-dismiss").click(function () {
+	$('#maintenance').modal("toggle");
+});
+
 });
 
 function printDiv() {

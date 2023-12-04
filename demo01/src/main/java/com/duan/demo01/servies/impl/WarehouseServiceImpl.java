@@ -34,6 +34,10 @@ public class WarehouseServiceImpl implements WarehouseService {
 
     @Override
     public Warehouse addWarehouse(Warehouse warehouse) {
+        if (warehouse.getStatus() == null){
+            Status status = statusRepo.findByStatusValue("active");
+            warehouse.setStatus(status);
+        }
         return warehouseRepo.save(warehouse);
     }
 
@@ -46,7 +50,7 @@ public class WarehouseServiceImpl implements WarehouseService {
     @Override
     public Warehouse updateWarehouse(Warehouse warehouse) {
         if (warehouse.getStatus() == null){
-            Status status = statusRepo.findByStatusValue("free");
+            Status status = statusRepo.findByStatusValue("active");
             warehouse.setStatus(status);
         }
         return warehouseRepo.save(warehouse);

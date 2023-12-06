@@ -4,7 +4,7 @@ $(document).ready(function () {
   $("#TIME_PICKER").datepicker();
   $("#deviceList").DataTable({
     fixedColumns: true,
-  pageLength: 5,
+    pageLength: 5,
     language: {
       lengthMenu: "Hiển thị _MENU_ hàng mỗi trang",
       zeroRecords: "Không có thiết bị trong xưởng",
@@ -25,10 +25,23 @@ $(document).ready(function () {
       {
         title: "Loại",
         data: "type",
+        render: function (data, type, row) {
+          if (data == null) {
+            return "";
+          }
+          return data.name;
+        },
       },
       {
         title: "Giá",
         data: "price",
+        className: "dt-body-right",
+        render: function (data, type, row) {
+          if ((data == null) | (data == "")) {
+            return "";
+          }
+          return data + " đ";
+        },
       },
       {
         title: "Ngày mua ",
@@ -39,8 +52,8 @@ $(document).ready(function () {
         data: "status.status",
       },
       {
-      width: 20,
-className: 'dt-center',
+        width: 20,
+        className: "dt-center",
         title: "Xem",
         data: "id",
         render: function (data, type, row) {
@@ -55,5 +68,4 @@ className: 'dt-center',
       },
     ],
   });
-
 });

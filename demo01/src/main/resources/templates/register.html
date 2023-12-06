@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org">
+<head th:replace="layout :: header">
+
+</head>
+<head>
+    <link th:href="@{/css/form.css}" rel="stylesheet"/>
+
+</head>
+<body class="bg-primary">
+<div id="layoutAuthentication">
+    <div id="layoutAuthentication_content">
+        <main>
+            <section class="ftco-section">
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col-md-7 col-lg-5">
+                            <form class="login-wrap p-4 p-md-5" th:action="@{/register}" method="post"
+                                  th:object="${userEntity}">
+                                <div class="icon d-flex align-items-center justify-content-center">
+                                    <i class="fa-solid fa-circle-user fa-7x text-primary"></i>
+                                </div>
+                                <h3 class="text-center mb-4 mt-2">Đăng kí</h3>
+                                <div th:if="${param.fail}" class="alert alert-success">
+                                    Tên hoặc email đã tồn tại !
+                                </div>
+                                <form action="#" class="login-form">
+                                    <div class="form-group mt-3">
+                                        <input type="text" class="form-control rounded-left" placeholder="Tên"
+                                               th:field="*{username}"
+                                               required>
+                                    </div>
+                                    <div class="form-group d-flex mt-3">
+                                        <input type="password" class="form-control rounded-left" placeholder="Mật khẩu"
+                                               th:field="*{password}"
+                                               required>
+                                    </div>
+                                    <div class="form-group d-flex mt-3">
+                                        <input type="email" class="form-control rounded-left" placeholder="Email"
+                                               th:field="*{email}"
+                                               required>
+                                    </div>
+                                    <div class="form-group mt-3">
+                                        <button type="submit" class="form-control btn btn-primary rounded submit px-3">
+                                            Xác nhận
+                                        </button>
+                                    </div>
+                                    <div class="form-group d-md-flex mt-3 justify-content-center">
+                                        <p>Đã có tài khoản? </p>
+                                        <a th:href="@{/login}" style="margin-left: 1rem;">Đăng nhập!</a>
+                                    </div>
+                                </form>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+    <div id="layoutAuthentication_footer">
+        <footer class="py-4 bg-light mt-auto">
+            <div class="container-fluid px-4">
+                <div class="d-flex align-items-center justify-content-between small">
+                    <div class="text-muted">Copyright &copy; Your Website 2023</div>
+                    <div>
+                        <a href="#">Privacy Policy</a>
+                        &middot;
+                        <a href="#">Terms &amp; Conditions</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+        crossorigin="anonymous"></script>
+<script src="js/scripts.js"></script>
+</body>
+</html>

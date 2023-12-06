@@ -4,14 +4,20 @@ $(document).ready(function () {
   $(".input-field").css("pointer-events", "none");
   $(".input-field").addClass("input-field-readonly");
 
-    $("#editBtn").click(function () {
-      $(".input-field").css("pointer-events", "auto");
-      $(".input-field").removeClass("input-field-readonly");
-      $(".name-input").addClass("form-control");
-      $(".name-input").css("pointer-events", "auto");
-      $(".btn-hidden").css("display", "inline-block");
-      $(this).css("display", "none");
-    });
+  $("#editBtn").click(function () {
+    $(".input-field").css("pointer-events", "auto");
+    $(".input-field").removeClass("input-field-readonly");
+    $(".name-input").addClass("form-control");
+    $(".name-input").css("pointer-events", "auto");
+    $(".btn-hidden").css("display", "inline-block");
+    $(this).css("display", "none");
+  });
+
+  $("#price").change(function () {
+    const value = this.value.replace(/\D/g, "");
+    const formated = new Intl.NumberFormat("vi-VN").format(value);
+    $(this).val(formated);
+  });
 
   $("#dateBuy").datepicker({
     dateFormat: "dd/mm/yy",
@@ -55,18 +61,16 @@ $(document).ready(function () {
   $("#printBtn").click(function () {
     $("#qr").printElement();
   });
-$("#modal-open").click(function () {
-	$('#maintenance').modal("toggle");
-	  $("#maintenanceDate").datepicker({
-        dateFormat: "dd/mm/yy",
-      });
+  $("#modal-open").click(function () {
+    $("#maintenance").modal("toggle");
+    $("#maintenanceDate").datepicker({
+      dateFormat: "dd/mm/yy",
+    });
+  });
 
-});
-
-$(".modal-dismiss").click(function () {
-	$('#maintenance').modal("toggle");
-});
-
+  $(".modal-dismiss").click(function () {
+    $("#maintenance").modal("toggle");
+  });
 });
 
 function printDiv() {

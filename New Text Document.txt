@@ -1,0 +1,113 @@
+
+@startuml
+actor User
+
+User -> DeviceController: thêm thiết bị
+activate DeviceController
+DeviceController -> DeviceService: thêm thiết bị
+activate DeviceService
+DeviceService -> DeviceRepository: lưu
+activate DeviceRepository
+DeviceRepository --> DeviceService: trả về thông tin thiết bị
+deactivate DeviceRepository
+DeviceService --> DeviceController: trả về thông tin thiết bị
+deactivate DeviceService
+DeviceController --> User: hiển thị page thông tin thiết bị
+deactivate DeviceController
+
+User -> DeviceController: cập nhập thiết bị (deviceId, info)
+activate DeviceController
+DeviceController -> DeviceService: cập nhập thiết bị(deviceId, info)
+activate DeviceService
+DeviceService -> DeviceRepository: Tìm thiết bị(deviceId)
+activate DeviceRepository
+DeviceRepository --> DeviceService: thiết bị tìm thấy
+deactivate DeviceRepository
+DeviceService -> DeviceRepository: cập nhập(device)
+activate DeviceRepository
+DeviceRepository --> DeviceService: trả về thông tin mới cập nhập
+deactivate DeviceRepository
+DeviceService --> DeviceController: trả về thông tin mới cập nhập
+deactivate DeviceService
+DeviceController --> User: hiển thị page thông tin
+deactivate DeviceController
+
+User -> DeviceController: yêu cầu xóa thiết bị(deviceId)
+activate DeviceController
+DeviceController -> DeviceService: xóa thiết bị(deviceId)
+activate DeviceService
+DeviceService -> DeviceRepository: tìm (deviceId)
+activate DeviceRepository
+DeviceRepository --> DeviceService: thiết bị tìm thấy
+deactivate DeviceRepository
+DeviceService -> DeviceRepository: xóa(device)
+activate DeviceRepository
+DeviceRepository --> DeviceService: trả về id thiết bị vừa xóa
+deactivate DeviceRepository
+DeviceService --> DeviceController: thông báo 
+deactivate DeviceService
+DeviceController --> User: thông báo
+deactivate DeviceController
+@enduml
+
+
+
+
+@startuml
+actor "Người dùng" as User
+participant "Controller" as Controller
+participant "Service" as Service
+participant "DeviceRepository" as DeviceRepo
+participant "WarehouseRepository" as WarehouseRepo
+participant "Kho hàng" as Warehouse
+participant "Thiết bị" as Device
+
+User -> Controller: Tạo kho hàng mới
+activate Controller
+Controller -> Service: Tạo kho hàng mới
+activate Service
+Service -> WarehouseRepo: Tạo kho hàng mới
+activate WarehouseRepo
+WarehouseRepo --> Service: Kho hàng đã được tạo
+deactivate WarehouseRepo
+deactivate Service
+Controller --> User: Kho hàng đã được tạo
+deactivate Controller
+
+User -> Controller: Cập nhật thông tin kho hàng
+activate Controller
+Controller -> Service: Cập nhật thông tin kho hàng
+activate Service
+Service -> WarehouseRepo: Cập nhật thông tin kho hàng
+activate WarehouseRepo
+WarehouseRepo --> Service: Thông tin kho hàng đã được cập nhật
+deactivate WarehouseRepo
+deactivate Service
+Controller --> User: Thông tin kho hàng đã được cập nhật
+deactivate Controller
+
+User -> Controller: Chọn thiết bị để thêm vào kho hàng
+activate Controller
+Controller -> Service: Hiển thị danh sách thiết bị
+activate Service
+Service -> DeviceRepo: Lấy danh sách thiết bị
+activate DeviceRepo
+DeviceRepo --> Service: Danh sách thiết bị
+deactivate DeviceRepo
+deactivate Service
+Controller --> User: Hiển thị danh sách thiết bị cho người dùng
+deactivate Controller
+
+User -> Controller: Chọn thiết bị để thêm vào kho hàng
+Controller -> Service: Thêm thiết bị vào kho hàng
+activate Service
+Service -> DeviceRepo: Thêm thiết bị vào kho hàng
+activate DeviceRepo
+DeviceRepo --> Service: Thiết bị đã được thêm vào kho hàng
+deactivate DeviceRepo
+deactivate Service
+Controller --> User: Thiết bị đã được thêm vào kho hàng
+deactivate Controller
+
+@enduml
+

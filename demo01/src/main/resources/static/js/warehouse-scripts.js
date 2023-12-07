@@ -1,6 +1,7 @@
 $(document).ready(function () {
   var url = window.location.origin + window.location.pathname;
   $("#warehouseList").DataTable({
+  scrollX: true,
     pageLength: 5,
     language: {
           lengthMenu: "Hiển thị _MENU_ hàng mỗi trang",

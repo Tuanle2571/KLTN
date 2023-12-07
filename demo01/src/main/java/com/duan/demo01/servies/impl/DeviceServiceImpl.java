@@ -82,6 +82,7 @@ public class DeviceServiceImpl implements DeviceService {
             BufferedImage qrCodeImage = QRCodeGenerator.getQRCodeImage(request);
             ByteArrayOutputStream bytes = new ByteArrayOutputStream();
             ImageIO.write(qrCodeImage, "png", bytes);
+
             InputStream qrImage = new ByteArrayInputStream(bytes.toByteArray());
             String qrImgName = ImageUtil.uploadFile(qrImage, "qr");
             QR qr = new QR();

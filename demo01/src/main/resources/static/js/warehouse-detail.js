@@ -15,6 +15,7 @@ $(document).ready(function () {
 
   console.log(warehouse.devices);
   const table = new DataTable("#warehouseDeviceList", {
+  scrollX: true,
     order: [1, "asc"],
     select: {
       style: "multi",

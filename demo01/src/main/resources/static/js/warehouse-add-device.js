@@ -1,6 +1,7 @@
 $(document).ready(function () {
   var url = window.location.origin;
   const table = new DataTable("#deviceList", {
+  scrollX: true,
     order: [1, "asc"],
     select: {
       style: "multi",
@@ -33,10 +34,18 @@ $(document).ready(function () {
       {
         title: "Loại",
         data: "type",
+        render: function (data, type, row) {
+          if (data == null) {
+            return "";
+          }
+          return data.name;
+        },
       },
       {
-        title: "Giá",
+ title: "Giá",
         data: "price",
+        className: "dt-body-right",
+        render: $.fn.dataTable.render.number( ',', '.', 3, null, " đ" )
       },
       {
         title: "Ngày mua ",

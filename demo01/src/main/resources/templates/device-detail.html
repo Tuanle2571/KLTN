@@ -27,13 +27,13 @@
                   id="deviceForm">
                 <div class="mt-4 device-head">
                     <div class=" d-flex justify-content-between">
-                        <div class="d-flex align-items-center">
+                        <div class="">
                             <a th:href="@{/device}">
                                 <i class="fa-solid fa-arrow-left fa-xl"></i>
                             </a>
                             <input type="text" th:field="*{name}" class="ms-3 name-input">
-                        </div>
-                        <div>
+                        </div >
+                        <div class="gap-1">
                             <button class="btn btn-primary" type="button" id="editBtn"> Sửa</button>
                             <button class="btn btn-primary btn-hidden" type="submit" id="commitBtn"
                                     value="update"
@@ -92,9 +92,10 @@
                                     Giá
                                 </label>
                                 <div class="input-group mb-3 w-75">
+                                    <input hidden="hidden" th:field="*{price}" id="i-price">
                                     <input type="text" class="form-control text-right input-field"
+                                           th:value="*{price}"
                                            aria-label="Default"
-                                           th:field="*{price}"
                                            id="price" aria-describedby="inputGroup-sizing-default">
                                     <div class="input-group-append">
                                         <span class="input-group-text">VNĐ</span>
@@ -188,7 +189,7 @@
                                 </div>
                             </div>
                             <div th:if="${device.qr != null}" id="qr" class="print-hidden">
-                                <img th:src="@{'/api/device/qr/' + ${device.qr.name}}" alt="image" class="w-100">
+                                <img th:src="@{'/device/detail/' + ${id} + '/qr'}" alt="image" class="w-100">
                             </div>
                         </div>
                     </div>
@@ -202,7 +203,7 @@
                                     </div>
                                 </div>
                                 <div class="card-body">
-                                    <table class="stripe cell-border" id="deviceMaintenanceList">
+                                    <table class="stripe cell-border w-100" id="deviceMaintenanceList">
                                     </table>
                                 </div>
                             </div>

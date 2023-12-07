@@ -3,6 +3,7 @@ $(document).ready(function () {
   $("#FORM_TIME_INPUT").datepicker();
   $("#TIME_PICKER").datepicker();
   $("#deviceList").DataTable({
+    scrollX: true,
     fixedColumns: true,
     pageLength: 5,
     language: {
@@ -36,12 +37,15 @@ $(document).ready(function () {
         title: "Giá",
         data: "price",
         className: "dt-body-right",
-        render: function (data, type, row) {
-          if ((data == null) | (data == "")) {
-            return "";
-          }
-          return data + " đ";
-        },
+        render: $.fn.dataTable.render.number( ',', '.', 3, null, " đ" )
+//        render: function (data, type, row) {
+//          if ((data == null) | (data == "")) {
+//            return "";
+//          }
+//          const value = data.replace(/\D/g, "");
+//          const formated = new Intl.NumberFormat("vi-VN").format(value);
+//          return formated + " đ";
+//        },
       },
       {
         title: "Ngày mua ",
@@ -58,12 +62,12 @@ $(document).ready(function () {
         data: "id",
         render: function (data, type, row) {
           return `
-                <a
-                                               href= "${url}/detail/${data}"
-                                              target="blank_">
-                                        <i class="fa-regular fa-eye"></i>
-                                      </a>
-              `;
+                  <a
+                                                 href= "${url}/detail/${data}"
+                                                target="blank_">
+                                          <i class="fa-regular fa-eye"></i>
+                                        </a>
+                `;
         },
       },
     ],

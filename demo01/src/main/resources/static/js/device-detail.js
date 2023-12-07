@@ -13,10 +13,17 @@ $(document).ready(function () {
     $(this).css("display", "none");
   });
 
+  const price =  $("#i-price").val();
+  const formated = new Intl.NumberFormat("vi-VN").format(price);
+  $("#price").val(formated);
+
+
+  //
   $("#price").change(function () {
     const value = this.value.replace(/\D/g, "");
     const formated = new Intl.NumberFormat("vi-VN").format(value);
     $(this).val(formated);
+    $("#i-price").val(value);
   });
 
   $("#dateBuy").datepicker({
@@ -27,6 +34,7 @@ $(document).ready(function () {
   });
 
   $("#deviceMaintenanceList").DataTable({
+  scrollX: true,
     language: {
       lengthMenu: "Hiển thị _MENU_ hàng mỗi trang",
       zeroRecords: "Không có thiết bị trong xưởng",

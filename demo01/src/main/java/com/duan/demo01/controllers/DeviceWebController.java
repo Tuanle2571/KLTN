@@ -7,13 +7,26 @@ import com.duan.demo01.models.UserEntity;
 import com.duan.demo01.repositories.DeviceTypeRepo;
 import com.duan.demo01.servies.DeviceService;
 import com.duan.demo01.servies.UserService;
+import com.duan.demo01.utils.QRCodeGenerator;
+import com.duan.demo01.utils.RequestUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -62,7 +75,7 @@ public class DeviceWebController {
 
     // ACTION
     @PostMapping("/add")
-    public String saveDevice(@ModelAttribute("device") Device device,@Nullable @RequestParam("userId") String userId,@Nullable @RequestParam("type") String typeId) {
+    public String saveDevice(@ModelAttribute("device") Device device, @Nullable @RequestParam("userId") String userId, @Nullable @RequestParam("type") String typeId) {
         if (!(userId.equalsIgnoreCase("") | userId == null)) {
             UserEntity user = userService.findUser(userId);
             device.setUser(user);
@@ -121,6 +134,34 @@ public class DeviceWebController {
         deviceService.addMaintenance(id, deviceMaintenance);
         return "redirect:/device/detail/" + id;
     }
+
+
+    @Value("${server.port}")
+    private String serverPort;
+
+    @GetMapping("/detail/{id}/qr")
+    public ResponseEntity<byte[]> getDeviceQR(HttpServletRequest request) {
+        byte[] QR = null;
+        try {
+            String requestURL = RequestUtil.getUrl(request);
+            requestURL = requestURL.substring(0, requestURL.lastIndexOf('/'));
+            String ip = InetAddress.getLocalHost().getHostAddress();
+            String address ="http://" + ip + ":" + serverPort;
+            String url = address + requestURL;
+
+
+            BufferedImage qrCodeImage = QRCodeGenerator.getQRCodeImage(url);
+            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+            ImageIO.write(qrCodeImage, "png", bytes);
+            QR = bytes.toByteArray();
+            return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(QR);
+        } catch (UnknownHostException e) {
+            return ResponseEntity.badRequest().build();
+        } catch (IOException e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
 
 }
 

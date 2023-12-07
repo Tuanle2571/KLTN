@@ -78,6 +78,11 @@ public class ImageUtil {
         }
     }
 
+    public static byte[] generateQR(String url){
+        byte[] QR = null;
+        return QR;
+    }
+
 
 
 }

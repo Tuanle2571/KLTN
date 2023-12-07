@@ -41,3 +41,7 @@ text-right{
     text-align: right !important;
     pointer-events: none;
 }
+input[readonly]{
+    background-color: #e9ecef !important;
+    opacity: 1 !important;
+}

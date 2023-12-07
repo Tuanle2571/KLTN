@@ -13,5 +13,10 @@ public class HomeController {
     public String home(){
         return "redirect:/dashboard";
     }
+
+    @RequestMapping("/dashboard")
+    public String dashboard(){
+        return "dashboard";
+    }
 }
 

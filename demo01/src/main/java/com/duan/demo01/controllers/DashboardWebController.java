@@ -32,17 +32,23 @@ public class DashboardWebController {
         List<UserEntity> userEntities = userService.getUsers();
         List<Warehouse> warehouses = warehouseService.listWarehouse();
         List<Device> devices = deviceService.getAllDevices();
-        int freeDevices = (int) devices.stream().filter(device -> device.getWarehouse() == null).count();
-        int repairWarehouse = (int) warehouses.stream().filter(warehouse -> warehouse.getStatus().getStatusValue() == "repairing").count();
-        int manager = (int) userEntities.stream().filter(user -> user.getRoles().stream().filter(role -> {
-            return role.getName() == "ADMIN";
-        }).isParallel()).count();
-        model.addAttribute("users", userEntities);
-        model.addAttribute("warehouses", warehouses);
-        model.addAttribute("devices", devices);
-        model.addAttribute("freeDevices", freeDevices);
-        model.addAttribute("repairWarehouse", repairWarehouse);
-        model.addAttribute("manager", manager);
-        return "dashboard";
+        try{
+            int freeDevices = (int) devices.stream().filter(device -> device.getWarehouse() == null).count();
+            int repairWarehouse = (int) warehouses.stream().filter(warehouse -> warehouse.getStatus().getStatusValue() == "repairing").count();
+            int manager = (int) userEntities.stream().filter(user -> user.getRoles().stream().filter(role -> {
+                return role.getName() == "ADMIN";
+            }).isParallel()).count();
+            model.addAttribute("users", userEntities);
+            model.addAttribute("warehouses", warehouses);
+            model.addAttribute("devices", devices);
+            model.addAttribute("freeDevices", freeDevices);
+            model.addAttribute("repairWarehouse", repairWarehouse);
+            model.addAttribute("manager", manager);
+            return "dashboard";
+        }
+        catch (Exception e){
+            return "dashboard?fail";
+        }
+
     }
 }

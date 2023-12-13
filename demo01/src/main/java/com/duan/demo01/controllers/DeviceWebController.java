@@ -16,10 +16,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -69,13 +71,17 @@ public class DeviceWebController {
             model.addAttribute("statuses", statuses);
             return "device-add";
         } catch (Exception e) {
-            return "404";
+            return "device-add?error=true";
         }
     }
 
     // ACTION
     @PostMapping("/add")
-    public String saveDevice(@ModelAttribute("device") Device device, @Nullable @RequestParam("userId") String userId, @Nullable @RequestParam("type") String typeId) {
+    public String saveDevice( @ModelAttribute("device")@Valid  Device device,BindingResult result, @Nullable @RequestParam("userId") String userId, @Nullable @RequestParam("type") String typeId) {
+        if (result.hasErrors()) {
+            return "redirect:/device/add?fail";
+        }
+
         if (!(userId.equalsIgnoreCase("") | userId == null)) {
             UserEntity user = userService.findUser(userId);
             device.setUser(user);
@@ -89,8 +95,13 @@ public class DeviceWebController {
         } else {
             device.setUser(null);
         }
-        Device added = deviceService.saveDevice(device);
-        return "redirect:/device/detail/" + added.getId();
+        try {
+            Device added = deviceService.saveDevice(device);
+            return "redirect:/device/detail/" + added.getId();
+        } catch (Exception E) {
+            return "device-add?fail";
+        }
+
     }
 
     @GetMapping("/detail/{id}")
@@ -146,7 +157,7 @@ public class DeviceWebController {
             String requestURL = RequestUtil.getUrl(request);
             requestURL = requestURL.substring(0, requestURL.lastIndexOf('/'));
             String ip = InetAddress.getLocalHost().getHostAddress();
-            String address ="http://" + ip + ":" + serverPort;
+            String address = "http://" + ip + ":" + serverPort;
             String url = address + requestURL;
 
 

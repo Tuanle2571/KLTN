@@ -9,14 +9,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("")
 public class HomeController {
 
-    @RequestMapping("")
+    @GetMapping("")
     public String home(){
         return "redirect:/dashboard";
     }
 
-    @RequestMapping("/dashboard")
-    public String dashboard(){
-        return "dashboard";
-    }
 }
 

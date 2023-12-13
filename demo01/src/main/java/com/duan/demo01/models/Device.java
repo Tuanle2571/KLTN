@@ -7,9 +7,11 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +31,8 @@ public class Device {
             strategy = "com.duan.demo01.utils.CustomIdGenerator")
     @GeneratedValue(generator = "Device-UUID")
     private String id;
+
+    @NotEmpty(message = "Hay nhap ten thiet bi")
     private String name;
     private String price;
     private String note;
